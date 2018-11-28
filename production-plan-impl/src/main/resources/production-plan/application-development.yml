@@ -13,6 +13,6 @@ spring:
 flyway:
   enabled: false
   locations: classpath:warehouse/flyway/{vendor}
-  table: flyway_schema_history_order_acceptance
+  table: flyway_schema_history_production_plan
   encoding: UTF-8
   baseline-on-migrate: true

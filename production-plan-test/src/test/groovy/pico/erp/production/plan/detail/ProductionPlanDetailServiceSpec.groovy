@@ -36,8 +36,6 @@ class ProductionPlanDetailServiceSpec extends Specification {
 
   def planId = ProductionPlanId.from("plan-1")
 
-  def planId2 = ProductionPlanId.from("plan-2")
-
   def planDetailId = ProductionPlanDetailId.from("plan-detail-1")
 
   def planDetailId2 = ProductionPlanDetailId.from("plan-detail-2")
@@ -70,7 +68,7 @@ class ProductionPlanDetailServiceSpec extends Specification {
     planDetailService.create(
       new ProductionPlanDetailRequests.CreateRequest(
         id: planDetailId,
-        planId: planId2,
+        planId: planId,
         itemId: itemId,
         quantity: 100,
         spareQuantity: 10,
@@ -84,7 +82,7 @@ class ProductionPlanDetailServiceSpec extends Specification {
     planDetailService.create(
       new ProductionPlanDetailRequests.CreateRequest(
         id: planDetailId2,
-        planId: planId2,
+        planId: planId,
         itemId: itemId,
         quantity: 100,
         spareQuantity: 10,

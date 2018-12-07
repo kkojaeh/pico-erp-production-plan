@@ -222,7 +222,7 @@ class ProductionPlanDetailServiceSpec extends Specification {
     details.size() > 0
   }
 
-  def "존재 - 아이디로 존재하는 주문접수 확인"() {
+  def "존재 - 아이디로 확인"() {
     when:
     def exists = planDetailService.exists(planDetailId)
 
@@ -230,7 +230,7 @@ class ProductionPlanDetailServiceSpec extends Specification {
     exists == true
   }
 
-  def "존재 - 아이디로 존재하지 않는 주문접수 확인"() {
+  def "존재 - 존재하지 않는 아이디로 확인"() {
     when:
     def exists = planDetailService.exists(unknownPlanId)
 
@@ -238,17 +238,17 @@ class ProductionPlanDetailServiceSpec extends Specification {
     exists == false
   }
 
-  def "조회 - 아이디로 존재하는 주문접수를 조회"() {
+  def "조회 - 아이디로 조회"() {
     when:
-    def ProductionPlanItem = planDetailService.get(planDetailId)
+    def detail = planDetailService.get(planDetailId)
 
-    println ProductionPlanItem
+    println detail
     then:
-    ProductionPlanItem.plannedQuantity == 110
-    ProductionPlanItem.itemId == itemId
+    detail.plannedQuantity == 110
+    detail.itemId == itemId
   }
 
-  def "조회 - 아이디로 존재하지 않는 주문접수를 조회"() {
+  def "조회 - 존재하지 않는 아이디로 조회"() {
     when:
     planDetailService.get(unknownPlanId)
 
@@ -256,7 +256,7 @@ class ProductionPlanDetailServiceSpec extends Specification {
     thrown(ProductionPlanDetailExceptions.NotFoundException)
   }
 
-  def "수정 - 확정 후 수정할 수 없다"() {
+  def "수정 - 확정 후 수정 불가"() {
     when:
     updatePlan()
     determinePlan()
@@ -266,7 +266,7 @@ class ProductionPlanDetailServiceSpec extends Specification {
     thrown(ProductionPlanDetailExceptions.CannotUpdateException)
   }
 
-  def "수정 - 취소 후 수정할 수 없다"() {
+  def "수정 - 취소 후 수정 불가"() {
     when:
     cancelPlan()
     updatePlan()
@@ -274,7 +274,7 @@ class ProductionPlanDetailServiceSpec extends Specification {
     thrown(ProductionPlanDetailExceptions.CannotUpdateException)
   }
 
-  def "수정 - 진행 중 수정할 수 없다"() {
+  def "수정 - 진행 중 수정 불가"() {
     when:
     updatePlan()
     determinePlan()
@@ -284,7 +284,7 @@ class ProductionPlanDetailServiceSpec extends Specification {
     thrown(ProductionPlanDetailExceptions.CannotUpdateException)
   }
 
-  def "수정 - 완료 후 수정할 수 없다"() {
+  def "수정 - 완료 후 수정 불가"() {
     when:
     updatePlan()
     determinePlan()
@@ -296,7 +296,7 @@ class ProductionPlanDetailServiceSpec extends Specification {
 
   }
 
-  def "수정 - 수정한다"() {
+  def "수정 - 생성 후 수정"() {
     when:
     updatePlan()
     def plan = planDetailService.get(planDetailId)
@@ -308,7 +308,7 @@ class ProductionPlanDetailServiceSpec extends Specification {
     plan.progressType == ProductionPlanDetailProgressTypeKind.PRODUCE
   }
 
-  def "취소 - 취소 후에는 취소 할 수 없다"() {
+  def "취소 - 취소 후에는 취소 불가"() {
     when:
     cancelPlan()
     cancelPlan()

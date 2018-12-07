@@ -84,7 +84,7 @@ class ProductionPlanServiceSpec extends Specification {
     )
   }
 
-  def "존재 - 아이디로 존재하는 주문접수 확인"() {
+  def "존재 - 아이디로 존재 확인"() {
     when:
     def exists = planService.exists(planId)
 
@@ -92,7 +92,7 @@ class ProductionPlanServiceSpec extends Specification {
     exists == true
   }
 
-  def "존재 - 아이디로 존재하지 않는 주문접수 확인"() {
+  def "존재 - 존재하지 않는 아이디로 확인"() {
     when:
     def exists = planService.exists(unknownPlanId)
 
@@ -100,7 +100,7 @@ class ProductionPlanServiceSpec extends Specification {
     exists == false
   }
 
-  def "조회 - 아이디로 존재하는 주문접수를 조회"() {
+  def "조회 - 아이디로 조회"() {
     when:
     def ProductionPlanItem = planService.get(planId)
 
@@ -110,7 +110,7 @@ class ProductionPlanServiceSpec extends Specification {
     ProductionPlanItem.itemId == itemId
   }
 
-  def "조회 - 아이디로 존재하지 않는 주문접수를 조회"() {
+  def "조회 - 존재하지 않는 아이디로 조회"() {
     when:
     planService.get(unknownPlanId)
 

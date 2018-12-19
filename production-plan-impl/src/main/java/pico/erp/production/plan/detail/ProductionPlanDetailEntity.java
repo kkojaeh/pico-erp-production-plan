@@ -17,6 +17,7 @@ import javax.persistence.EntityListeners;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
@@ -44,7 +45,7 @@ import pico.erp.shared.data.Auditor;
 import pico.erp.user.UserId;
 
 @Entity(name = "ProductionPlanDetail")
-@Table(name = "PRP_PRODUCTION_PLAN_DETAIL")
+@Table(name = "PRP_PRODUCTION_PLAN_DETAIL", indexes = @Index(columnList = "PLAN_ID"))
 @Data
 @EqualsAndHashCode(of = "id")
 @FieldDefaults(level = AccessLevel.PRIVATE)

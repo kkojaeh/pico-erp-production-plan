@@ -18,7 +18,6 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
-import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import lombok.AccessLevel;
@@ -37,6 +36,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import pico.erp.company.CompanyId;
 import pico.erp.item.ItemId;
 import pico.erp.item.spec.ItemSpecId;
+import pico.erp.process.ProcessId;
+import pico.erp.process.preparation.ProcessPreparationId;
 import pico.erp.production.plan.ProductionPlanId;
 import pico.erp.shared.TypeDefinitions;
 import pico.erp.shared.data.Auditor;
@@ -145,8 +146,25 @@ public class ProductionPlanDetailEntity implements Serializable {
   @CollectionTable(name = "PRP_PRODUCTION_PLAN_DETAIL_DEPENDENCY", joinColumns = @JoinColumn(name = "PLAN_DETAIL_ID"), uniqueConstraints = {
     @UniqueConstraint(columnNames = {"PLAN_DETAIL_ID", "PLAN_DETAIL_DEPENDENCY_ID"})
   })
-  @OrderColumn
   Set<ProductionPlanDetailId> dependencies;
+
+  @AttributeOverrides({
+    @AttributeOverride(name = "value", column = @Column(name = "PROCESS_ID", length = TypeDefinitions.UUID_BINARY_LENGTH))
+  })
+  ProcessId processId;
+
+  @AttributeOverrides({
+    @AttributeOverride(name = "value", column = @Column(name = "PROCESS_PREPARATION_ID", length = TypeDefinitions.UUID_BINARY_LENGTH))
+  })
+  ProcessPreparationId processPreparationId;
+
+  @AttributeOverrides({
+    @AttributeOverride(name = "value", column = @Column(name = "GROUP_ID", length = TypeDefinitions.UUID_BINARY_LENGTH))
+  })
+  ProductionPlanDetailGroupId groupId;
+
+  @Column(name = "DEPENDENCY_ORDER")
+  int order;
 
   /*
   @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)

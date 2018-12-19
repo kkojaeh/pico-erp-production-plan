@@ -1,6 +1,5 @@
 package pico.erp.production.plan.detail;
 
-import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.event.EventListener;
@@ -26,10 +25,9 @@ public class ProductionPlanDetailEventListener {
   @EventListener
   @JmsListener(destination = LISTENER_NAME + "." + ProductionPlanEvents.CreatedEvent.CHANNEL)
   public void onPlanCreated(ProductionPlanEvents.CreatedEvent event) {
-    val plan = planService.get(event.getProductionPlanId());
     planDetailService.generate(
-      ProductionPlanDetailServiceLogic.GenerateRequest.builder()
-        .plan(plan)
+      ProductionPlanDetailRequests.GenerateRequest.builder()
+        .planId(event.getProductionPlanId())
         .build()
     );
   }
@@ -39,7 +37,7 @@ public class ProductionPlanDetailEventListener {
     + ProductionPlanDetailEvents.RescheduledEvent.CHANNEL)
   public void onPlanDetailRescheduled(ProductionPlanDetailEvents.RescheduledEvent event) {
     planDetailService.rescheduleByDependency(
-      ProductionPlanDetailServiceLogic.RescheduleByDependencyRequest.builder()
+      ProductionPlanDetailRequests.RescheduleByDependencyRequest.builder()
         .dependencyId(event.getProductionPlanDetailId())
         .beforeStartDate(event.getBeforeStartDate())
         .beforeEndDate(event.getBeforeEndDate())

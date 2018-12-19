@@ -16,8 +16,9 @@ import org.hibernate.validator.constraints.ScriptAssert;
 import pico.erp.company.CompanyData;
 import pico.erp.item.ItemData;
 import pico.erp.item.spec.ItemSpecData;
+import pico.erp.process.ProcessData;
+import pico.erp.process.preparation.ProcessPreparationData;
 import pico.erp.production.plan.ProductionPlan;
-import pico.erp.production.plan.ProductionPlanId;
 import pico.erp.shared.event.Event;
 import pico.erp.user.UserData;
 
@@ -44,7 +45,10 @@ public interface ProductionPlanDetailMessages {
     @NotNull
     ItemData item;
 
-    @Valid
+    ProcessData process;
+
+    ProcessPreparationData processPreparation;
+
     ItemSpecData itemSpec;
 
     @NotNull

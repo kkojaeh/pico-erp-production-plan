@@ -15,10 +15,10 @@ import pico.erp.production.plan.ProductionPlanId;
 interface ProductionPlanDetailEntityRepository extends
   CrudRepository<ProductionPlanDetailEntity, ProductionPlanDetailId> {
 
-  @Query("SELECT d FROM ProductionPlanDetail d WHERE d.planId = :planId")
+  @Query("SELECT d FROM ProductionPlanDetail d WHERE d.planId = :planId ORDER BY order")
   Stream<ProductionPlanDetailEntity> findAllBy(@Param("planId") ProductionPlanId planId);
 
-  @Query("SELECT d FROM ProductionPlanDetail d WHERE :planDetailId MEMBER OF d.dependencies")
+  @Query("SELECT d FROM ProductionPlanDetail d WHERE :planDetailId MEMBER OF d.dependencies ORDER BY order")
   Stream<ProductionPlanDetailEntity> findAllDependedOn(
     @Param("planDetailId") ProductionPlanDetailId planDetailId);
 

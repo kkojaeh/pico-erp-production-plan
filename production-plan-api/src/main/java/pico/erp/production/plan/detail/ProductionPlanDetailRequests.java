@@ -9,10 +9,13 @@ import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import pico.erp.company.CompanyId;
 import pico.erp.item.ItemId;
 import pico.erp.item.spec.ItemSpecId;
+import pico.erp.process.ProcessId;
+import pico.erp.process.preparation.ProcessPreparationId;
 import pico.erp.production.plan.ProductionPlanId;
 import pico.erp.user.UserId;
 
@@ -34,6 +37,12 @@ public interface ProductionPlanDetailRequests {
     @Valid
     @NotNull
     ItemId itemId;
+
+    @Valid
+    ProcessId processId;
+
+    @Valid
+    ProcessPreparationId processPreparationId;
 
     @Valid
     ItemSpecId itemSpecId;
@@ -215,4 +224,29 @@ public interface ProductionPlanDetailRequests {
 
   }
 
+  @Getter
+  @Builder
+  class GenerateRequest {
+
+    @Valid
+    @NotNull
+    ProductionPlanId planId;
+
+  }
+
+  @Getter
+  @Builder
+  class RescheduleByDependencyRequest {
+
+    @Valid
+    @NotNull
+    ProductionPlanDetailId dependencyId;
+
+    @NotNull
+    OffsetDateTime beforeStartDate;
+
+    @NotNull
+    OffsetDateTime beforeEndDate;
+
+  }
 }

@@ -22,10 +22,10 @@ import lombok.val;
 import pico.erp.audit.annotation.Audit;
 import pico.erp.company.CompanyData;
 import pico.erp.item.ItemData;
-import pico.erp.item.ItemId;
 import pico.erp.item.spec.ItemSpecData;
+import pico.erp.process.ProcessData;
+import pico.erp.process.preparation.ProcessPreparationData;
 import pico.erp.production.plan.ProductionPlan;
-import pico.erp.production.plan.ProductionPlanId;
 import pico.erp.shared.event.Event;
 import pico.erp.user.UserData;
 
@@ -46,9 +46,15 @@ public class ProductionPlanDetail implements Serializable {
   @Id
   ProductionPlanDetailId id;
 
+  ProductionPlanDetailGroupId groupId;
+
   ProductionPlan plan;
 
   ItemData item;
+
+  ProcessData process;
+
+  ProcessPreparationData processPreparation;
 
   ItemSpecData itemSpec;
 
@@ -78,19 +84,7 @@ public class ProductionPlanDetail implements Serializable {
 
   Set<ProductionPlanDetail> dependencies;
 
-/*
-  public OffsetDateTime calculateParentProgressibleDate() {
-
-    OffsetDateTime date = endDate;
-
-    for (ProductionPlanSchedule schedule : schedules) {
-      if (schedule.getScheduledDate().isBefore(date)) {
-        date = schedule.getScheduledDate();
-      }
-    }
-    return date;
-  }*/
-
+  int order;
 
   public ProductionPlanDetail() {
 
@@ -99,8 +93,11 @@ public class ProductionPlanDetail implements Serializable {
   public ProductionPlanDetailMessages.CreateResponse apply(
     ProductionPlanDetailMessages.CreateRequest request) {
     this.id = request.getId();
+    this.groupId = ProductionPlanDetailGroupId.generate();
     this.plan = request.getPlan();
     this.item = request.getItem();
+    this.process = request.getProcess();
+    this.processPreparation = request.getProcessPreparation();
     this.itemSpec = request.getItemSpec();
     this.quantity = request.getQuantity();
     this.spareQuantity = request.getSpareQuantity();
@@ -109,8 +106,43 @@ public class ProductionPlanDetail implements Serializable {
     this.endDate = request.getEndDate();
     this.status = ProductionPlanDetailStatusKind.CREATED;
     this.dependencies = new HashSet<>();
+    this.order = 0;
     return new ProductionPlanDetailMessages.CreateResponse(
       Arrays.asList(new ProductionPlanDetailEvents.CreatedEvent(this.id))
+    );
+  }
+
+  public ProductionPlanDetailMessages.SplitResponse apply(
+    ProductionPlanDetailMessages.SplitRequest request) {
+    if (!isSplittable()) {
+      throw new ProductionPlanDetailExceptions.CannotSplitException();
+    }
+    val remainedQuantity = this.getPlannedQuantity().subtract(this.progressedQuantity);
+    val splitQuantity = request.getQuantity().add(request.getSpareQuantity());
+    if (splitQuantity.compareTo(remainedQuantity) > 0) {
+      throw new ProductionPlanDetailExceptions.CannotSplitException();
+    }
+    this.quantity = this.quantity.subtract(request.getQuantity());
+    this.spareQuantity = this.spareQuantity.subtract(request.getSpareQuantity());
+    val split = new ProductionPlanDetail();
+    split.id = ProductionPlanDetailId.generate();
+    split.groupId = this.groupId;
+    split.plan = this.plan;
+    split.item = this.item;
+    split.process = this.process;
+    split.processPreparation = this.processPreparation;
+    split.itemSpec = this.itemSpec;
+    split.quantity = request.getQuantity();
+    split.spareQuantity = request.getSpareQuantity();
+    split.progressedQuantity = BigDecimal.ZERO;
+    split.startDate = this.startDate;
+    split.endDate = this.endDate;
+    split.status = ProductionPlanDetailStatusKind.CREATED;
+    split.dependencies = new HashSet<>(this.dependencies);
+
+    return new ProductionPlanDetailMessages.SplitResponse(
+      Arrays.asList(new ProductionPlanDetailEvents.SplitEvent(this.id)),
+      split
     );
   }
 
@@ -155,34 +187,24 @@ public class ProductionPlanDetail implements Serializable {
     );
   }
 
-  public ProductionPlanDetailMessages.SplitResponse apply(
-    ProductionPlanDetailMessages.SplitRequest request) {
-    if (!isSplittable()) {
-      throw new ProductionPlanDetailExceptions.CannotSplitException();
+  public ProductionPlanDetailMessages.AddDependencyResponse apply(
+    ProductionPlanDetailMessages.AddDependencyRequest request) {
+    if (!isUpdatable()) {
+      throw new ProductionPlanDetailExceptions.CannotUpdateException();
     }
-    val remainedQuantity = this.getPlannedQuantity().subtract(this.progressedQuantity);
-    val splitQuantity = request.getQuantity().add(request.getSpareQuantity());
-    if (splitQuantity.compareTo(remainedQuantity) > 0) {
-      throw new ProductionPlanDetailExceptions.CannotSplitException();
-    }
-    this.quantity = this.quantity.subtract(request.getQuantity());
-    this.spareQuantity = this.spareQuantity.subtract(request.getSpareQuantity());
-    val split = new ProductionPlanDetail();
-    split.id = ProductionPlanDetailId.generate();
-    split.plan = this.plan;
-    split.item = this.item;
-    split.itemSpec = this.itemSpec;
-    split.quantity = request.getQuantity();
-    split.spareQuantity = request.getSpareQuantity();
-    split.progressedQuantity = BigDecimal.ZERO;
-    split.startDate = this.startDate;
-    split.endDate = this.endDate;
-    split.status = ProductionPlanDetailStatusKind.CREATED;
-    split.dependencies = new HashSet<>(this.dependencies);
 
-    return new ProductionPlanDetailMessages.SplitResponse(
-      Arrays.asList(new ProductionPlanDetailEvents.SplitEvent(this.id)),
-      split
+    val dependency = request.getDependency();
+
+    if (isDeepDependOn(dependency) || this.dependencies.contains(dependency)) {
+      throw new ProductionPlanDetailExceptions.CannotUpdateException();
+    }
+    this.dependencies.add(dependency);
+    this.order = this.dependencies.stream()
+      .map(ProductionPlanDetail::getOrder)
+      .max(Comparator.comparing(i -> i))
+      .orElse(0) + 1;
+    return new ProductionPlanDetailMessages.AddDependencyResponse(
+      Arrays.asList(new ProductionPlanDetailEvents.UpdatedEvent(this.id))
     );
   }
 
@@ -260,21 +282,14 @@ public class ProductionPlanDetail implements Serializable {
     );
   }
 
-  public ProductionPlanDetailMessages.AddDependencyResponse apply(
-    ProductionPlanDetailMessages.AddDependencyRequest request) {
-    if (!isUpdatable()) {
-      throw new ProductionPlanDetailExceptions.CannotUpdateException();
+  public String getName() {
+    if (processPreparation != null) {
+      return "사전공정 " + processPreparation.getName();
+    } else if (process != null) {
+      return "공정 " + process.getName() + " : " + item.getName();
+    } else {
+      return item.getName();
     }
-
-    val dependency = request.getDependency();
-
-    if (isDeepDependOn(dependency) || this.dependencies.contains(dependency)) {
-      throw new ProductionPlanDetailExceptions.CannotUpdateException();
-    }
-    this.dependencies.add(dependency);
-    return new ProductionPlanDetailMessages.AddDependencyResponse(
-      Arrays.asList(new ProductionPlanDetailEvents.UpdatedEvent(this.id))
-    );
   }
 
   public ProductionPlanDetailMessages.RemoveDependencyResponse apply(
@@ -296,16 +311,16 @@ public class ProductionPlanDetail implements Serializable {
   }
 
   protected OffsetDateTime getStartableDate() {
-    val endDates = new HashMap<ItemId, OffsetDateTime>();
+    val endDates = new HashMap<ProductionPlanDetailGroupId, OffsetDateTime>();
     for (ProductionPlanDetail dependency : dependencies) {
-      val itemId = dependency.getItem().getId();
+      val groupId = dependency.getGroupId();
       val endDate = dependency.getEndDate();
-      if (!endDates.containsKey(itemId)) {
-        endDates.put(itemId, OffsetDateTime.MAX);
+      if (!endDates.containsKey(groupId)) {
+        endDates.put(groupId, OffsetDateTime.MAX);
       }
-      val mappedDate = endDates.get(itemId);
+      val mappedDate = endDates.get(groupId);
       if (endDate.isBefore(mappedDate)) {
-        endDates.put(itemId, endDate);
+        endDates.put(groupId, endDate);
       }
     }
     return endDates.values().stream()

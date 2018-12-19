@@ -23,4 +23,6 @@ dependencies {
 
   compile("com.github.kkojaeh.pico-erp-bom:bom-api:${bomVersion}")
 
+  compile("com.github.kkojaeh.pico-erp-process:process-api:${processVersion}")
+
 }

@@ -5,9 +5,12 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Lazy
 import org.springframework.test.annotation.Rollback
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.transaction.annotation.Transactional
+import pico.erp.bom.BomService
+import pico.erp.bom.process.BomProcessService
 import pico.erp.company.CompanyId
 import pico.erp.item.ItemId
 import pico.erp.production.plan.ProductionPlanId
@@ -53,8 +56,28 @@ class ProductionPlanDetailServiceSpec extends Specification {
   def planStartDate = OffsetDateTime.now().plusDays(2)
   def planEndDate = planStartDate.plusDays(1)
 
+  @Lazy
+  @Autowired
+  BomProcessService bomProcessService
+
+  @Lazy
+  @Autowired
+  BomService bomService
+
 
   def setup() {
+    def bom = bomService.get(ItemId.from("toothbrush-0"))
+    println bomProcessService.getAll(bom.getId())
+    planService.create(
+      new ProductionPlanRequests.CreateRequest(
+        id: ProductionPlanId.from("plan-2"),
+        itemId: ItemId.from("toothbrush-0"),
+        quantity: 100,
+        spareQuantity: 10,
+        projectId: projectId,
+        dueDate: OffsetDateTime.now().plusDays(7)
+      )
+    )
     planService.create(
       new ProductionPlanRequests.CreateRequest(
         id: planId,
@@ -62,7 +85,7 @@ class ProductionPlanDetailServiceSpec extends Specification {
         quantity: 100,
         spareQuantity: 10,
         projectId: projectId,
-        dueDate: OffsetDateTime.now().plusDays(2)
+        dueDate: OffsetDateTime.now().plusDays(7)
       )
     )
     planDetailService.create(
@@ -217,7 +240,13 @@ class ProductionPlanDetailServiceSpec extends Specification {
 
   def "자동생성 - 생산 계획이 생성되면 BOM 에 따라 상세계획이 생성된다"() {
     when:
-    def details = planDetailService.getAll(planId)
+    def details = planDetailService.getAll(ProductionPlanId.from("plan-2"))
+    /*def mapper = new ObjectMapper()
+    mapper.registerModule(new JavaTimeModule())
+    mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+    mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    println mapper.writeValueAsString(details)*/
+
     then:
     details.size() > 0
   }

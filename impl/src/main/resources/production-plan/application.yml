@@ -87,6 +87,9 @@ flyway:
   enabled: false
 
 production-plan:
+  charger-group:
+    id: prdp-charger
+    name: 생산 계획 담당자
   detail-generation-policy:
     start-time: "09:00"
     end-time: "18:00"

@@ -71,19 +71,6 @@ class ProductionPlanServiceSpec extends Specification {
     )
   }
 
-  def updatePlanNotEnough() {
-    planService.update(
-      new ProductionPlanRequests.UpdateRequest(
-        id: planId,
-        quantity: 100,
-        spareQuantity: 10,
-        dueDate: planDueDate,
-        progressCompanyId: progressCompanyId,
-        progressType: ProductionPlanProgressTypeKind.PRODUCE
-      )
-    )
-  }
-
   def "존재 - 아이디로 존재 확인"() {
     when:
     def exists = planService.exists(planId)

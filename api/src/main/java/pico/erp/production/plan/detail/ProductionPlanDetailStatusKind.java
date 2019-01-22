@@ -8,7 +8,7 @@ import pico.erp.shared.data.LocalizedNameable;
 public enum ProductionPlanDetailStatusKind implements LocalizedNameable {
 
   /**
-   * 주문이 접수가 생성됨을 의미
+   * 상세 계획 생성
    */
   CREATED(true, true, true, false, false, true, false),
 

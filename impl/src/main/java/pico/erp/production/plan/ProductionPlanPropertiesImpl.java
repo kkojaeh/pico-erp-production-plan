@@ -1,24 +1,19 @@
 package pico.erp.production.plan;
 
-import java.time.LocalTime;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
+import pico.erp.shared.Public;
+import pico.erp.user.group.GroupData;
 
+@Public
 @Data
 @Configuration
 @ConfigurationProperties("production-plan")
-public class ProductionPlanProperties {
+public class ProductionPlanPropertiesImpl implements ProductionPlanProperties {
+
+  GroupData chargerGroup;
 
   DetailGenerationPolicy detailGenerationPolicy;
-
-  @Data
-  public static class DetailGenerationPolicy {
-
-    LocalTime startTime;
-
-    LocalTime endTime;
-
-  }
 
 }

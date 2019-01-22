@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import pico.erp.company.CompanyId;
 import pico.erp.item.ItemId;
 import pico.erp.project.ProjectId;
 import pico.erp.shared.data.Auditor;
@@ -21,9 +20,13 @@ public class ProductionPlanView {
 
   ItemId itemId;
 
-  BigDecimal plannedQuantity;
+  BigDecimal quantity;
+
+  BigDecimal spareQuantity;
 
   BigDecimal progressedQuantity;
+
+  ProjectId projectId;
 
   OffsetDateTime dueDate;
 
@@ -46,8 +49,6 @@ public class ProductionPlanView {
   public static class Filter {
 
     String code;
-
-    CompanyId relatedCompanyId;
 
     ProjectId projectId;
 

@@ -71,7 +71,6 @@ public class ProductionPlan implements Serializable {
     this.dueDate = request.getDueDate();
     this.status = ProductionPlanStatusKind.CREATED;
     this.code = request.getCodeGenerator().generate(this);
-    // TODO: plan 품목 생성
     return new ProductionPlanMessages.CreateResponse(
       Arrays.asList(new ProductionPlanEvents.CreatedEvent(this.id))
     );

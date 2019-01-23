@@ -75,12 +75,13 @@ public abstract class ProductionPlanMapper {
       .item(map(entity.getItemId()))
       .quantity(entity.getQuantity())
       .spareQuantity(entity.getSpareQuantity())
-      .progressedQuantity(entity.getProgressedQuantity())
+      .completedQuantity(entity.getCompletedQuantity())
       .dueDate(entity.getDueDate())
       .determinedDate(entity.getDeterminedDate())
       .completedDate(entity.getCompletedDate())
       .canceledDate(entity.getCanceledDate())
       .status(entity.getStatus())
+      .progressRate(entity.getProgressRate())
       .build();
   }
 
@@ -133,19 +134,34 @@ public abstract class ProductionPlanMapper {
     @Mapping(target = "project", source = "projectId"),
     @Mapping(target = "codeGenerator", expression = "java(productionPlanCodeGenerator)")
   })
-  public abstract ProductionPlanMessages.CreateRequest map(
+  public abstract ProductionPlanMessages.Create.Request map(
     ProductionPlanRequests.CreateRequest request);
 
   @Mappings({
   })
-  public abstract ProductionPlanMessages.UpdateRequest map(
+  public abstract ProductionPlanMessages.Update.Request map(
     ProductionPlanRequests.UpdateRequest request);
 
 
   @Mappings({
   })
-  public abstract ProductionPlanMessages.CancelRequest map(
+  public abstract ProductionPlanMessages.Cancel.Request map(
     ProductionPlanRequests.CancelRequest request);
+
+  @Mappings({
+  })
+  public abstract ProductionPlanMessages.Determine.Request map(
+    ProductionPlanRequests.DetermineRequest request);
+
+  @Mappings({
+  })
+  public abstract ProductionPlanMessages.Complete.Request map(
+    ProductionPlanRequests.CompleteRequest request);
+
+  @Mappings({
+  })
+  public abstract ProductionPlanMessages.Progress.Request map(
+    ProductionPlanRequests.ProgressRequest request);
 
   public abstract void pass(ProductionPlanEntity from, @MappingTarget ProductionPlanEntity to);
 

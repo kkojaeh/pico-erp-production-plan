@@ -75,7 +75,7 @@ public class ProductionPlanEntity implements Serializable {
   BigDecimal spareQuantity;
 
   @Column(precision = 19, scale = 2)
-  BigDecimal progressedQuantity;
+  BigDecimal completedQuantity;
 
   OffsetDateTime dueDate;
 
@@ -88,6 +88,9 @@ public class ProductionPlanEntity implements Serializable {
   @Column(length = TypeDefinitions.ENUM_LENGTH)
   @Enumerated(EnumType.STRING)
   ProductionPlanStatusKind status;
+
+  @Column(precision = 7, scale = 5)
+  BigDecimal progressRate;
 
   @Embedded
   @AttributeOverrides({

@@ -5,6 +5,7 @@ import java.time.OffsetDateTime;
 import java.util.Collection;
 import javax.validation.Valid;
 import javax.validation.constraints.Future;
+import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import lombok.Data;
@@ -15,107 +16,146 @@ import pico.erp.shared.event.Event;
 
 public interface ProductionPlanMessages {
 
-  @Data
-  class CreateRequest {
+  interface Create {
 
-    @Valid
-    @NotNull
-    ProductionPlanId id;
+    @Data
+    class Request {
 
-    @Valid
-    @NotNull
-    ItemData item;
+      @Valid
+      @NotNull
+      ProductionPlanId id;
 
-    @NotNull
-    @Min(0)
-    BigDecimal quantity;
+      @Valid
+      @NotNull
+      ItemData item;
 
-    @NotNull
-    @Min(0)
-    BigDecimal spareQuantity;
+      @NotNull
+      @Min(0)
+      BigDecimal quantity;
 
-    @Valid
-    @NotNull
-    ProjectData project;
+      @NotNull
+      @Min(0)
+      BigDecimal spareQuantity;
 
-    @Future
-    @NotNull
-    OffsetDateTime dueDate;
+      @Valid
+      @NotNull
+      ProjectData project;
 
-    @NotNull
-    ProductionPlanCodeGenerator codeGenerator;
+      @Future
+      @NotNull
+      OffsetDateTime dueDate;
 
-  }
+      @NotNull
+      ProductionPlanCodeGenerator codeGenerator;
 
-  @Data
-  class UpdateRequest {
+    }
 
-    @NotNull
-    @Min(0)
-    BigDecimal quantity;
+    @Value
+    class Response {
 
-    @NotNull
-    @Min(0)
-    BigDecimal spareQuantity;
+      Collection<Event> events;
 
-    @Future
-    @NotNull
-    OffsetDateTime dueDate;
+    }
 
   }
 
-  @Data
-  class DetermineRequest {
+  interface Update {
+
+    @Data
+    class Request {
+
+      @NotNull
+      @Min(0)
+      BigDecimal quantity;
+
+      @NotNull
+      @Min(0)
+      BigDecimal spareQuantity;
+
+      @Future
+      @NotNull
+      OffsetDateTime dueDate;
+
+    }
+
+    @Value
+    class Response {
+
+      Collection<Event> events;
+
+    }
+  }
+
+  interface Determine {
+
+    @Data
+    class Request {
+
+    }
+
+    @Value
+    class Response {
+
+      Collection<Event> events;
+
+    }
 
   }
 
+  interface Complete {
 
-  @Data
-  class CompleteRequest {
+    @Data
+    class Request {
 
+      @NotNull
+      @Min(0)
+      BigDecimal completedQuantity;
 
+    }
+
+    @Value
+    class Response {
+
+      Collection<Event> events;
+
+    }
   }
 
-  @Data
-  class CancelRequest {
+  interface Cancel {
+
+    @Data
+    class Request {
 
 
+    }
+
+    @Value
+    class Response {
+
+      Collection<Event> events;
+
+    }
   }
 
-  @Value
-  class CreateResponse {
+  interface Progress {
 
-    Collection<Event> events;
+    @Data
+    class Request {
 
-  }
-
-  @Value
-  class UpdateResponse {
-
-    Collection<Event> events;
-
-  }
+      @NotNull
+      @Min(0)
+      @Max(1)
+      BigDecimal progressRate;
 
 
-  @Value
-  class DetermineResponse {
+    }
 
-    Collection<Event> events;
+    @Value
+    class Response {
 
-  }
+      Collection<Event> events;
 
-  @Value
-  class CompleteResponse {
-
-    Collection<Event> events;
-
-  }
-
-  @Value
-  class CancelResponse {
-
-    Collection<Event> events;
-
+    }
   }
 
 

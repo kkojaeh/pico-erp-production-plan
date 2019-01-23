@@ -8,6 +8,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import pico.erp.audit.AuditService;
 import pico.erp.production.plan.ProductionPlanRequests.CancelRequest;
+import pico.erp.production.plan.ProductionPlanRequests.CompleteRequest;
+import pico.erp.production.plan.ProductionPlanRequests.DetermineRequest;
+import pico.erp.production.plan.ProductionPlanRequests.ProgressRequest;
 import pico.erp.shared.Public;
 import pico.erp.shared.event.EventPublisher;
 
@@ -42,6 +45,16 @@ public class ProductionPlanServiceLogic implements ProductionPlanService {
   }
 
   @Override
+  public void complete(CompleteRequest request) {
+    val plan = productionPlanRepository.findBy(request.getId())
+      .orElseThrow(ProductionPlanExceptions.NotFoundException::new);
+    val response = plan.apply(mapper.map(request));
+    productionPlanRepository.update(plan);
+    auditService.commit(plan);
+    eventPublisher.publishEvents(response.getEvents());
+  }
+
+  @Override
   public ProductionPlanData create(ProductionPlanRequests.CreateRequest request) {
     val plan = new ProductionPlan();
     val response = plan.apply(mapper.map(request));
@@ -55,6 +68,16 @@ public class ProductionPlanServiceLogic implements ProductionPlanService {
   }
 
   @Override
+  public void determine(DetermineRequest request) {
+    val plan = productionPlanRepository.findBy(request.getId())
+      .orElseThrow(ProductionPlanExceptions.NotFoundException::new);
+    val response = plan.apply(mapper.map(request));
+    productionPlanRepository.update(plan);
+    auditService.commit(plan);
+    eventPublisher.publishEvents(response.getEvents());
+  }
+
+  @Override
   public boolean exists(ProductionPlanId id) {
     return productionPlanRepository.exists(id);
   }
@@ -64,6 +87,16 @@ public class ProductionPlanServiceLogic implements ProductionPlanService {
     return productionPlanRepository.findBy(id)
       .map(mapper::map)
       .orElseThrow(ProductionPlanExceptions.NotFoundException::new);
+  }
+
+  @Override
+  public void progress(ProgressRequest request) {
+    val plan = productionPlanRepository.findBy(request.getId())
+      .orElseThrow(ProductionPlanExceptions.NotFoundException::new);
+    val response = plan.apply(mapper.map(request));
+    productionPlanRepository.update(plan);
+    auditService.commit(plan);
+    eventPublisher.publishEvents(response.getEvents());
   }
 
   @Override

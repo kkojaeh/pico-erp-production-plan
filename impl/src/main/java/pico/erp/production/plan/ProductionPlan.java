@@ -42,7 +42,9 @@ public class ProductionPlan implements Serializable {
 
   BigDecimal spareQuantity;
 
-  BigDecimal progressedQuantity;
+  BigDecimal completedQuantity;
+
+  BigDecimal progressRate;
 
   OffsetDateTime dueDate;
 
@@ -60,68 +62,81 @@ public class ProductionPlan implements Serializable {
 
   }
 
-  public ProductionPlanMessages.CreateResponse apply(
-    ProductionPlanMessages.CreateRequest request) {
+  public ProductionPlanMessages.Create.Response apply(
+    ProductionPlanMessages.Create.Request request) {
     this.id = request.getId();
     this.item = request.getItem();
     this.project = request.getProject();
     this.quantity = request.getQuantity();
     this.spareQuantity = request.getSpareQuantity();
-    this.progressedQuantity = BigDecimal.ZERO;
     this.dueDate = request.getDueDate();
     this.status = ProductionPlanStatusKind.CREATED;
+    this.progressRate = BigDecimal.ZERO;
     this.code = request.getCodeGenerator().generate(this);
-    return new ProductionPlanMessages.CreateResponse(
+    return new ProductionPlanMessages.Create.Response(
       Arrays.asList(new ProductionPlanEvents.CreatedEvent(this.id))
     );
   }
 
-  public ProductionPlanMessages.UpdateResponse apply(
-    ProductionPlanMessages.UpdateRequest request) {
+  public ProductionPlanMessages.Update.Response apply(
+    ProductionPlanMessages.Update.Request request) {
     if (!isUpdatable()) {
       throw new CannotUpdateException();
     }
     this.quantity = request.getQuantity();
     this.spareQuantity = request.getSpareQuantity();
     this.dueDate = request.getDueDate();
-    return new ProductionPlanMessages.UpdateResponse(
+    return new ProductionPlanMessages.Update.Response(
       Arrays.asList(new ProductionPlanEvents.UpdatedEvent(this.id))
     );
   }
 
-  public ProductionPlanMessages.DetermineResponse apply(
-    ProductionPlanMessages.DetermineRequest request) {
+  public ProductionPlanMessages.Determine.Response apply(
+    ProductionPlanMessages.Determine.Request request) {
     if (!isDeterminable()) {
       throw new ProductionPlanExceptions.CannotDetermineException();
     }
     this.status = ProductionPlanStatusKind.DETERMINED;
     this.determinedDate = OffsetDateTime.now();
-    return new ProductionPlanMessages.DetermineResponse(
+    return new ProductionPlanMessages.Determine.Response(
       Arrays.asList(new ProductionPlanEvents.DeterminedEvent(this.id))
     );
   }
 
-  public ProductionPlanMessages.CancelResponse apply(
-    ProductionPlanMessages.CancelRequest request) {
+  public ProductionPlanMessages.Cancel.Response apply(
+    ProductionPlanMessages.Cancel.Request request) {
     if (!isCancelable()) {
       throw new ProductionPlanExceptions.CannotCancelException();
     }
     this.status = ProductionPlanStatusKind.CANCELED;
     this.canceledDate = OffsetDateTime.now();
-    return new ProductionPlanMessages.CancelResponse(
+    return new ProductionPlanMessages.Cancel.Response(
       Arrays.asList(new ProductionPlanEvents.CanceledEvent(this.id))
     );
   }
 
-  public ProductionPlanMessages.CompleteResponse apply(
-    ProductionPlanMessages.CompleteRequest request) {
+  public ProductionPlanMessages.Complete.Response apply(
+    ProductionPlanMessages.Complete.Request request) {
     if (!isCompletable()) {
       throw new ProductionPlanExceptions.CannotCompleteException();
     }
     this.status = ProductionPlanStatusKind.COMPLETED;
+    this.completedQuantity = request.getCompletedQuantity();
     this.completedDate = OffsetDateTime.now();
-    return new ProductionPlanMessages.CompleteResponse(
+    return new ProductionPlanMessages.Complete.Response(
       Arrays.asList(new ProductionPlanEvents.CompletedEvent(this.id))
+    );
+  }
+
+  public ProductionPlanMessages.Progress.Response apply(
+    ProductionPlanMessages.Progress.Request request) {
+    if (!isProgressable()) {
+      throw new ProductionPlanExceptions.CannotProgressException();
+    }
+    this.status = ProductionPlanStatusKind.IN_PROGRESS;
+    this.progressRate = request.getProgressRate();
+    return new ProductionPlanMessages.Progress.Response(
+      Arrays.asList(new ProductionPlanEvents.ProgressedEvent(this.id))
     );
   }
 
@@ -143,14 +158,6 @@ public class ProductionPlan implements Serializable {
 
   public boolean isProgressable() {
     return status.isProgressable();
-  }
-
-  public boolean isReschedulable() {
-    return status.isReschedulable();
-  }
-
-  public boolean isSplittable() {
-    return status.isSplittable();
   }
 
   public boolean isUpdatable() {

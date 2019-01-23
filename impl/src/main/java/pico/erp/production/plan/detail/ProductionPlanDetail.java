@@ -282,16 +282,6 @@ public class ProductionPlanDetail implements Serializable {
     );
   }
 
-  public String getName() {
-    if (processPreparation != null) {
-      return "사전공정 " + processPreparation.getName();
-    } else if (process != null) {
-      return "공정 " + process.getName() + " : " + item.getName();
-    } else {
-      return item.getName();
-    }
-  }
-
   public ProductionPlanDetailMessages.RemoveDependencyResponse apply(
     ProductionPlanDetailMessages.RemoveDependencyRequest request) {
     if (!isUpdatable()) {
@@ -304,6 +294,16 @@ public class ProductionPlanDetail implements Serializable {
     return new ProductionPlanDetailMessages.RemoveDependencyResponse(
       Arrays.asList(new ProductionPlanDetailEvents.UpdatedEvent(this.id))
     );
+  }
+
+  public String getName() {
+    if (processPreparation != null) {
+      return "사전공정 " + processPreparation.getName();
+    } else if (process != null) {
+      return "공정 " + process.getName() + " : " + item.getName();
+    } else {
+      return item.getName();
+    }
   }
 
   public BigDecimal getPlannedQuantity() {

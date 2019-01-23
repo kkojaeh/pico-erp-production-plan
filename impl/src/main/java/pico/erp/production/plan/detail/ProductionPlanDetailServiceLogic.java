@@ -287,6 +287,68 @@ public class ProductionPlanDetailServiceLogic implements ProductionPlanDetailSer
       .collect(Collectors.toList());
   }
 
+  @Override
+  public void progress(ProductionPlanDetailRequests.ProgressRequest request) {
+    val plan = planDetailRepository.findBy(request.getId())
+      .orElseThrow(ProductionPlanDetailExceptions.NotFoundException::new);
+    val response = plan.apply(mapper.map(request));
+    planDetailRepository.update(plan);
+    auditService.commit(plan);
+    eventPublisher.publishEvents(response.getEvents());
+  }
+
+  @Override
+  public void removeDependency(ProductionPlanDetailRequests.RemoveDependencyRequest request) {
+    val plan = planDetailRepository.findBy(request.getId())
+      .orElseThrow(ProductionPlanDetailExceptions.NotFoundException::new);
+    val response = plan.apply(mapper.map(request));
+    planDetailRepository.update(plan);
+    auditService.commit(plan);
+    eventPublisher.publishEvents(response.getEvents());
+  }
+
+  @Override
+  public void reschedule(ProductionPlanDetailRequests.RescheduleRequest request) {
+    val plan = planDetailRepository.findBy(request.getId())
+      .orElseThrow(ProductionPlanDetailExceptions.NotFoundException::new);
+    val response = plan.apply(mapper.map(request));
+    planDetailRepository.update(plan);
+    auditService.commit(plan);
+    eventPublisher.publishEvents(response.getEvents());
+  }
+
+  public void rescheduleByDependency(RescheduleByDependencyRequest request) {
+    val message = mapper.map(request);
+    planDetailRepository.findAllDependedOn(request.getDependencyId()).forEach(detail -> {
+      val response = detail.apply(message);
+      planDetailRepository.update(detail);
+      auditService.commit(detail);
+      eventPublisher.publishEvents(response.getEvents());
+    });
+  }
+
+  @Override
+  public ProductionPlanDetailData split(ProductionPlanDetailRequests.SplitRequest request) {
+    val plan = planDetailRepository.findBy(request.getId())
+      .orElseThrow(ProductionPlanDetailExceptions.NotFoundException::new);
+    val response = plan.apply(mapper.map(request));
+    planDetailRepository.update(plan);
+    auditService.commit(plan);
+    val splitPlan = planDetailRepository.create(response.getSplitPlan());
+    eventPublisher.publishEvents(response.getEvents());
+    return mapper.map(splitPlan);
+  }
+
+  @Override
+  public void update(ProductionPlanDetailRequests.UpdateRequest request) {
+    val plan = planDetailRepository.findBy(request.getId())
+      .orElseThrow(ProductionPlanDetailExceptions.NotFoundException::new);
+    val response = plan.apply(mapper.map(request));
+    planDetailRepository.update(plan);
+    auditService.commit(plan);
+    eventPublisher.publishEvents(response.getEvents());
+  }
+
   @Getter
   private class GenerateContext {
 
@@ -387,68 +449,6 @@ public class ProductionPlanDetailServiceLogic implements ProductionPlanDetailSer
     long levelToGap(long level) {
       return levelGaps.get(level);
     }
-  }
-
-  @Override
-  public void progress(ProductionPlanDetailRequests.ProgressRequest request) {
-    val plan = planDetailRepository.findBy(request.getId())
-      .orElseThrow(ProductionPlanDetailExceptions.NotFoundException::new);
-    val response = plan.apply(mapper.map(request));
-    planDetailRepository.update(plan);
-    auditService.commit(plan);
-    eventPublisher.publishEvents(response.getEvents());
-  }
-
-  @Override
-  public void removeDependency(ProductionPlanDetailRequests.RemoveDependencyRequest request) {
-    val plan = planDetailRepository.findBy(request.getId())
-      .orElseThrow(ProductionPlanDetailExceptions.NotFoundException::new);
-    val response = plan.apply(mapper.map(request));
-    planDetailRepository.update(plan);
-    auditService.commit(plan);
-    eventPublisher.publishEvents(response.getEvents());
-  }
-
-  @Override
-  public void reschedule(ProductionPlanDetailRequests.RescheduleRequest request) {
-    val plan = planDetailRepository.findBy(request.getId())
-      .orElseThrow(ProductionPlanDetailExceptions.NotFoundException::new);
-    val response = plan.apply(mapper.map(request));
-    planDetailRepository.update(plan);
-    auditService.commit(plan);
-    eventPublisher.publishEvents(response.getEvents());
-  }
-
-  public void rescheduleByDependency(RescheduleByDependencyRequest request) {
-    val message = mapper.map(request);
-    planDetailRepository.findAllDependedOn(request.getDependencyId()).forEach(detail -> {
-      val response = detail.apply(message);
-      planDetailRepository.update(detail);
-      auditService.commit(detail);
-      eventPublisher.publishEvents(response.getEvents());
-    });
-  }
-
-  @Override
-  public ProductionPlanDetailData split(ProductionPlanDetailRequests.SplitRequest request) {
-    val plan = planDetailRepository.findBy(request.getId())
-      .orElseThrow(ProductionPlanDetailExceptions.NotFoundException::new);
-    val response = plan.apply(mapper.map(request));
-    planDetailRepository.update(plan);
-    auditService.commit(plan);
-    val splitPlan = planDetailRepository.create(response.getSplitPlan());
-    eventPublisher.publishEvents(response.getEvents());
-    return mapper.map(splitPlan);
-  }
-
-  @Override
-  public void update(ProductionPlanDetailRequests.UpdateRequest request) {
-    val plan = planDetailRepository.findBy(request.getId())
-      .orElseThrow(ProductionPlanDetailExceptions.NotFoundException::new);
-    val response = plan.apply(mapper.map(request));
-    planDetailRepository.update(plan);
-    auditService.commit(plan);
-    eventPublisher.publishEvents(response.getEvents());
   }
 
 }

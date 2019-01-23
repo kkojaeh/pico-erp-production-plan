@@ -21,7 +21,7 @@ public class ProductionPlanData {
 
   BigDecimal plannedQuantity;
 
-  BigDecimal progressedQuantity;
+  BigDecimal completedQuantity;
 
   ProjectId projectId;
 
@@ -34,5 +34,17 @@ public class ProductionPlanData {
   OffsetDateTime canceledDate;
 
   ProductionPlanStatusKind status;
+
+  BigDecimal progressRate;
+
+  boolean updatable;
+
+  boolean determinable;
+
+  boolean progressable;
+
+  boolean cancelable;
+
+  boolean completable;
 
 }

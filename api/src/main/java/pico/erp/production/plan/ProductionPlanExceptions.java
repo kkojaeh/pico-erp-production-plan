@@ -29,12 +29,6 @@ public interface ProductionPlanExceptions {
     private static final long serialVersionUID = 1L;
   }
 
-  @ResponseStatus(code = HttpStatus.NOT_ACCEPTABLE, reason = "production-plan.cannot.split.exception")
-  class CannotSplitException extends RuntimeException {
-
-    private static final long serialVersionUID = 1L;
-  }
-
   @ResponseStatus(code = HttpStatus.NOT_ACCEPTABLE, reason = "production-plan.cannot.cancel.exception")
   class CannotCancelException extends RuntimeException {
 
@@ -43,12 +37,6 @@ public interface ProductionPlanExceptions {
 
   @ResponseStatus(code = HttpStatus.NOT_ACCEPTABLE, reason = "production-plan.cannot.complete.exception")
   class CannotCompleteException extends RuntimeException {
-
-    private static final long serialVersionUID = 1L;
-  }
-
-  @ResponseStatus(code = HttpStatus.NOT_ACCEPTABLE, reason = "production-plan.cannot.reschedule.exception")
-  class CannotRescheduleException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;
   }

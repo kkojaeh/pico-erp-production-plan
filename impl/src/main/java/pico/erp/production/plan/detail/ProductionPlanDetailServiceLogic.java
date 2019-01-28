@@ -22,8 +22,6 @@ import pico.erp.bom.BomData;
 import pico.erp.bom.BomHierarchyData;
 import pico.erp.bom.BomId;
 import pico.erp.bom.BomService;
-import pico.erp.bom.process.BomProcessData;
-import pico.erp.bom.process.BomProcessService;
 import pico.erp.process.ProcessData;
 import pico.erp.process.ProcessService;
 import pico.erp.process.preparation.ProcessPreparationData;
@@ -66,10 +64,6 @@ public class ProductionPlanDetailServiceLogic implements ProductionPlanDetailSer
 
   @Autowired
   private ProductionPlanService productionPlanService;
-
-  @Lazy
-  @Autowired
-  private BomProcessService bomProcessService;
 
   @Lazy
   @Autowired
@@ -240,9 +234,9 @@ public class ProductionPlanDetailServiceLogic implements ProductionPlanDetailSer
 
   private List<ProductionPlanDetailData> generate(BomData bom, int level, GenerateContext context) {
     val result = new LinkedList<ProductionPlanDetailData>();
-    val bomProcesses = bomProcessService.getAll(bom.getId());
+    val processes = processService.getAll(bom.getItemId());
     val depth = context.levelToDepth(level);
-    if (bomProcesses.isEmpty()) {
+    if (processes.isEmpty()) {
       val detail = ProductionPlanDetailData.builder()
         .id(ProductionPlanDetailId.generate())
         .planId(context.getPlan().getId())
@@ -258,9 +252,8 @@ public class ProductionPlanDetailServiceLogic implements ProductionPlanDetailSer
       context.add(detail);
     } else {
       ProductionPlanDetailData previous = null;
-      for (int i = 0; i < bomProcesses.size(); i++) {
-        BomProcessData bomProcess = bomProcesses.get(i);
-        val process = processService.get(bomProcess.getProcessId());
+      for (int i = 0; i < processes.size(); i++) {
+        val process = processes.get(i);
         val processDepth = depth + context.levelToGap(level) - i - 1;
         ProductionPlanDetailData generated = generate(process, bom, processDepth, context);
         if (previous != null) {
@@ -385,12 +378,12 @@ public class ProductionPlanDetailServiceLogic implements ProductionPlanDetailSer
         if (!levelGaps.containsKey(level)) {
           levelGaps.put(level, 0L);
         }
-        val processes = bomProcessService.getAll(bom.getId());
+        val processes = processService.getAll(bom.getItemId());
         if (processes.isEmpty()) {
           levelGaps.put(level, Math.max(1L, levelGaps.get(level)));
         } else {
           val preparationCount = processes.stream()
-            .map(BomProcessData::getProcessId)
+            .map(ProcessData::getId)
             .map(processId -> processPreparationService.getAll(processId)
               .stream()
               .filter(preparation -> !preparation.isDone())

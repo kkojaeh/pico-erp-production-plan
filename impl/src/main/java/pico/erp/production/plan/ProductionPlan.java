@@ -72,6 +72,7 @@ public class ProductionPlan implements Serializable {
     this.dueDate = request.getDueDate();
     this.status = ProductionPlanStatusKind.CREATED;
     this.progressRate = BigDecimal.ZERO;
+    this.completedQuantity = BigDecimal.ZERO;
     this.code = request.getCodeGenerator().generate(this);
     return new ProductionPlanMessages.Create.Response(
       Arrays.asList(new ProductionPlanEvents.CreatedEvent(this.id))

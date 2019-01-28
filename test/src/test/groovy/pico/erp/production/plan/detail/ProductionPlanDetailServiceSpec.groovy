@@ -10,7 +10,6 @@ import org.springframework.test.annotation.Rollback
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.transaction.annotation.Transactional
 import pico.erp.bom.BomService
-import pico.erp.bom.process.BomProcessService
 import pico.erp.company.CompanyId
 import pico.erp.item.ItemId
 import pico.erp.production.plan.ProductionPlanId
@@ -58,16 +57,10 @@ class ProductionPlanDetailServiceSpec extends Specification {
 
   @Lazy
   @Autowired
-  BomProcessService bomProcessService
-
-  @Lazy
-  @Autowired
   BomService bomService
 
 
   def setup() {
-    def bom = bomService.get(ItemId.from("toothbrush-0"))
-    println bomProcessService.getAll(bom.getId())
     planService.create(
       new ProductionPlanRequests.CreateRequest(
         id: ProductionPlanId.from("plan-2"),

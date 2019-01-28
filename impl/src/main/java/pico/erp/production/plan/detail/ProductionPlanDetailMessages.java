@@ -24,241 +24,298 @@ import pico.erp.user.UserData;
 
 public interface ProductionPlanDetailMessages {
 
-  @Builder
-  @NoArgsConstructor
-  @AllArgsConstructor
-  @Data
-  @ScriptAssert.List({
-    @ScriptAssert(lang = "javascript", alias = "_", script = "_.startDate.isBefore(_.endDate)", message = "{start-date.after.than.end-date")
-  })
-  class CreateRequest {
+  interface Create {
 
-    @Valid
-    @NotNull
-    ProductionPlanDetailId id;
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Data
+    @ScriptAssert.List({
+      @ScriptAssert(lang = "javascript", alias = "_", script = "_.startDate.isBefore(_.endDate)", message = "{start-date.after.than.end-date")
+    })
+    class Request {
 
-    @Valid
-    @NotNull
-    ProductionPlan plan;
+      @Valid
+      @NotNull
+      ProductionPlanDetailId id;
 
-    @Valid
-    @NotNull
-    ItemData item;
+      @Valid
+      @NotNull
+      ProductionPlan plan;
 
-    ProcessData process;
+      @Valid
+      @NotNull
+      ItemData item;
 
-    ProcessPreparationData processPreparation;
+      ProcessData process;
 
-    ItemSpecData itemSpec;
+      ProcessPreparationData processPreparation;
 
-    @NotNull
-    @Min(0)
-    BigDecimal quantity;
+      ItemSpecData itemSpec;
 
-    @NotNull
-    @Min(0)
-    BigDecimal spareQuantity;
+      @NotNull
+      @Min(0)
+      BigDecimal quantity;
 
-    @Future
-    @NotNull
-    OffsetDateTime startDate;
+      @NotNull
+      @Min(0)
+      BigDecimal spareQuantity;
 
-    @Future
-    @NotNull
-    OffsetDateTime endDate;
+      @Future
+      @NotNull
+      OffsetDateTime startDate;
+
+      @Future
+      @NotNull
+      OffsetDateTime endDate;
+
+    }
+
+    @Value
+    class Response {
+
+      Collection<Event> events;
+
+    }
+  }
+
+  interface Update {
+
+    @Data
+    @ScriptAssert.List({
+      @ScriptAssert(lang = "javascript", alias = "_", script = "_.startDate.isBefore(_.endDate)", message = "{start-date.after.than.end-date")
+    })
+    class Request {
+
+      @NotNull
+      @Min(0)
+      BigDecimal quantity;
+
+      @NotNull
+      @Min(0)
+      BigDecimal spareQuantity;
+
+      @Future
+      @NotNull
+      OffsetDateTime startDate;
+
+      @Future
+      @NotNull
+      OffsetDateTime endDate;
+
+      UserData charger;
+
+      CompanyData progressCompany;
+
+      ProductionPlanDetailProgressTypeKind progressType;
+
+    }
+
+    @Value
+    class Response {
+
+      Collection<Event> events;
+
+    }
 
   }
 
-  @Data
-  @ScriptAssert.List({
-    @ScriptAssert(lang = "javascript", alias = "_", script = "_.startDate.isBefore(_.endDate)", message = "{start-date.after.than.end-date")
-  })
-  class UpdateRequest {
+  interface Progress {
 
-    @NotNull
-    @Min(0)
-    BigDecimal quantity;
+    @Data
+    class Request {
 
-    @NotNull
-    @Min(0)
-    BigDecimal spareQuantity;
+      @NotNull
+      @Min(0)
+      BigDecimal progressedQuantity;
 
-    @Future
-    @NotNull
-    OffsetDateTime startDate;
+    }
 
-    @Future
-    @NotNull
-    OffsetDateTime endDate;
+    @Value
+    class Response {
 
-    UserData charger;
+      Collection<Event> events;
 
-    CompanyData progressCompany;
+    }
+  }
 
-    ProductionPlanDetailProgressTypeKind progressType;
+  interface Determine {
+
+    @Data
+    class Request {
+
+    }
+
+    @Value
+    class Response {
+
+      Collection<Event> events;
+
+    }
 
   }
 
-  @Data
-  class ProgressRequest {
+  interface Reschedule {
 
-    @NotNull
-    @Min(0)
-    BigDecimal progressedQuantity;
+    @Data
+    @ScriptAssert.List({
+      @ScriptAssert(lang = "javascript", alias = "_", script = "_.startDate.isBefore(_.endDate)", message = "{start-date.after.than.end-date")
+    })
+    class Request {
 
-  }
+      @NotNull
+      OffsetDateTime startDate;
 
-  @Data
-  class DetermineRequest {
+      @Future
+      @NotNull
+      OffsetDateTime endDate;
 
-  }
+    }
 
-  @Data
-  @ScriptAssert.List({
-    @ScriptAssert(lang = "javascript", alias = "_", script = "_.startDate.isBefore(_.endDate)", message = "{start-date.after.than.end-date")
-  })
-  class RescheduleRequest {
+    @Value
+    class Response {
 
-    @NotNull
-    OffsetDateTime startDate;
+      Collection<Event> events;
 
-    @Future
-    @NotNull
-    OffsetDateTime endDate;
+    }
 
   }
 
-  @Data
-  @ScriptAssert.List({
-    @ScriptAssert(lang = "javascript", alias = "_", script = "_.beforeStartDate.isBefore(_.beforeEndDate)", message = "{start-date.after.than.end-date")
-  })
-  class RescheduleByDependencyRequest {
+  interface RescheduleByDependency {
 
-    @NotNull
-    ProductionPlanDetail dependency;
+    @Data
+    @ScriptAssert.List({
+      @ScriptAssert(lang = "javascript", alias = "_", script = "_.beforeStartDate.isBefore(_.beforeEndDate)", message = "{start-date.after.than.end-date")
+    })
+    class Request {
 
-    @NotNull
-    OffsetDateTime beforeStartDate;
+      @NotNull
+      ProductionPlanDetail dependency;
 
-    @NotNull
-    OffsetDateTime beforeEndDate;
+      @NotNull
+      OffsetDateTime beforeStartDate;
 
-  }
+      @NotNull
+      OffsetDateTime beforeEndDate;
 
-  @Data
-  class CompleteRequest {
+    }
 
-  }
+    @Value
+    class Response {
 
-  @Data
-  class CancelRequest {
+      Collection<Event> events;
 
-
-  }
-
-  @Data
-  class SplitRequest {
-
-    @NotNull
-    @Min(0)
-    BigDecimal quantity;
-
-    @NotNull
-    @Min(0)
-    BigDecimal spareQuantity;
+    }
 
   }
 
-  @Data
-  class AddDependencyRequest {
+  interface Complete {
 
-    ProductionPlanDetail dependency;
+    @Data
+    class Request {
 
-  }
+    }
 
-  @Data
-  class RemoveDependencyRequest {
+    @Value
+    class Response {
 
-    ProductionPlanDetail dependency;
+      Collection<Event> events;
 
-  }
-
-  @Value
-  class CreateResponse {
-
-    Collection<Event> events;
+    }
 
   }
 
-  @Value
-  class UpdateResponse {
+  interface Cancel {
 
-    Collection<Event> events;
+    @Data
+    class Request {
 
-  }
 
-  @Value
-  class SplitResponse {
+    }
 
-    Collection<Event> events;
+    @Value
+    class Response {
 
-    ProductionPlanDetail splitPlan;
+      Collection<Event> events;
 
-  }
-
-  @Value
-  class ProgressResponse {
-
-    Collection<Event> events;
+    }
 
   }
 
-  @Value
-  class DetermineResponse {
+  interface Delete {
 
-    Collection<Event> events;
+    @Data
+    class Request {
 
-  }
+    }
 
-  @Value
-  class CompleteResponse {
+    @Value
+    class Response {
 
-    Collection<Event> events;
+      Collection<Event> events;
 
-  }
-
-  @Value
-  class CancelResponse {
-
-    Collection<Event> events;
+    }
 
   }
 
-  @Value
-  class RescheduleResponse {
+  interface Split {
 
-    Collection<Event> events;
+    @Data
+    class Request {
+
+      @NotNull
+      @Min(0)
+      BigDecimal quantity;
+
+      @NotNull
+      @Min(0)
+      BigDecimal spareQuantity;
+
+    }
+
+    @Value
+    class Response {
+
+      Collection<Event> events;
+
+      ProductionPlanDetail split;
+
+    }
 
   }
 
-  @Value
-  class AddDependencyResponse {
+  interface AddDependency {
 
-    Collection<Event> events;
+    @Data
+    class Request {
 
+      ProductionPlanDetail dependency;
+
+    }
+
+    @Value
+    class Response {
+
+      Collection<Event> events;
+
+    }
   }
 
-  @Value
-  class RemoveDependencyResponse {
+  interface RemoveDependency {
 
-    Collection<Event> events;
+    @Data
+    class Request {
 
-  }
+      ProductionPlanDetail dependency;
 
-  @Value
-  class RescheduleByDependencyResponse {
+    }
 
-    Collection<Event> events;
+    @Value
+    class Response {
+
+      Collection<Event> events;
+
+    }
 
   }
 

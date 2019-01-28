@@ -139,6 +139,18 @@ public interface ProductionPlanDetailRequests {
   @NoArgsConstructor
   @AllArgsConstructor
   @Builder
+  class DeleteRequest {
+
+    @Valid
+    @NotNull
+    ProductionPlanDetailId id;
+
+  }
+
+  @Data
+  @NoArgsConstructor
+  @AllArgsConstructor
+  @Builder
   class RescheduleRequest {
 
     @Valid

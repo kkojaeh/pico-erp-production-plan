@@ -194,62 +194,67 @@ public abstract class ProductionPlanDetailMapper {
     @Mapping(target = "processPreparation", source = "processPreparationId"),
     @Mapping(target = "itemSpec", source = "itemSpecId")
   })
-  public abstract ProductionPlanDetailMessages.CreateRequest map(
+  public abstract ProductionPlanDetailMessages.Create.Request map(
     ProductionPlanDetailRequests.CreateRequest request);
 
   @Mappings({
     @Mapping(target = "charger", source = "chargerId"),
     @Mapping(target = "progressCompany", source = "progressCompanyId")
   })
-  public abstract ProductionPlanDetailMessages.UpdateRequest map(
+  public abstract ProductionPlanDetailMessages.Update.Request map(
     ProductionPlanDetailRequests.UpdateRequest request);
 
   @Mappings({
   })
-  public abstract ProductionPlanDetailMessages.ProgressRequest map(
+  public abstract ProductionPlanDetailMessages.Progress.Request map(
     ProductionPlanDetailRequests.ProgressRequest request);
 
   @Mappings({
   })
-  public abstract ProductionPlanDetailMessages.RescheduleRequest map(
+  public abstract ProductionPlanDetailMessages.Reschedule.Request map(
     ProductionPlanDetailRequests.RescheduleRequest request);
 
   @Mappings({
   })
-  public abstract ProductionPlanDetailMessages.CancelRequest map(
+  public abstract ProductionPlanDetailMessages.Cancel.Request map(
     ProductionPlanDetailRequests.CancelRequest request);
 
   @Mappings({
   })
-  public abstract ProductionPlanDetailMessages.CompleteRequest map(
+  public abstract ProductionPlanDetailMessages.Complete.Request map(
     ProductionPlanDetailRequests.CompleteRequest request);
 
   @Mappings({
   })
-  public abstract ProductionPlanDetailMessages.DetermineRequest map(
+  public abstract ProductionPlanDetailMessages.Determine.Request map(
     ProductionPlanDetailRequests.DetermineRequest request);
 
   @Mappings({
   })
-  public abstract ProductionPlanDetailMessages.SplitRequest map(
+  public abstract ProductionPlanDetailMessages.Delete.Request map(
+    ProductionPlanDetailRequests.DeleteRequest request);
+
+  @Mappings({
+  })
+  public abstract ProductionPlanDetailMessages.Split.Request map(
     ProductionPlanDetailRequests.SplitRequest request);
 
   @Mappings({
     @Mapping(target = "dependency", source = "dependencyId")
   })
-  public abstract ProductionPlanDetailMessages.AddDependencyRequest map(
+  public abstract ProductionPlanDetailMessages.AddDependency.Request map(
     ProductionPlanDetailRequests.AddDependencyRequest request);
 
   @Mappings({
     @Mapping(target = "dependency", source = "dependencyId")
   })
-  public abstract ProductionPlanDetailMessages.RemoveDependencyRequest map(
+  public abstract ProductionPlanDetailMessages.RemoveDependency.Request map(
     ProductionPlanDetailRequests.RemoveDependencyRequest request);
 
   @Mappings({
     @Mapping(target = "dependency", source = "dependencyId")
   })
-  public abstract ProductionPlanDetailMessages.RescheduleByDependencyRequest map(
+  public abstract ProductionPlanDetailMessages.RescheduleByDependency.Request map(
     RescheduleByDependencyRequest request);
 
   public abstract void pass(

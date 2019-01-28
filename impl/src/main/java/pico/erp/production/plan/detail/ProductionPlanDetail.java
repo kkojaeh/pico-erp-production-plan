@@ -90,8 +90,8 @@ public class ProductionPlanDetail implements Serializable {
 
   }
 
-  public ProductionPlanDetailMessages.CreateResponse apply(
-    ProductionPlanDetailMessages.CreateRequest request) {
+  public ProductionPlanDetailMessages.Create.Response apply(
+    ProductionPlanDetailMessages.Create.Request request) {
     this.id = request.getId();
     this.groupId = ProductionPlanDetailGroupId.generate();
     this.plan = request.getPlan();
@@ -107,13 +107,13 @@ public class ProductionPlanDetail implements Serializable {
     this.status = ProductionPlanDetailStatusKind.CREATED;
     this.dependencies = new HashSet<>();
     this.order = 0;
-    return new ProductionPlanDetailMessages.CreateResponse(
+    return new ProductionPlanDetailMessages.Create.Response(
       Arrays.asList(new ProductionPlanDetailEvents.CreatedEvent(this.id))
     );
   }
 
-  public ProductionPlanDetailMessages.SplitResponse apply(
-    ProductionPlanDetailMessages.SplitRequest request) {
+  public ProductionPlanDetailMessages.Split.Response apply(
+    ProductionPlanDetailMessages.Split.Request request) {
     if (!isSplittable()) {
       throw new ProductionPlanDetailExceptions.CannotSplitException();
     }
@@ -140,14 +140,14 @@ public class ProductionPlanDetail implements Serializable {
     split.status = ProductionPlanDetailStatusKind.CREATED;
     split.dependencies = new HashSet<>(this.dependencies);
 
-    return new ProductionPlanDetailMessages.SplitResponse(
+    return new ProductionPlanDetailMessages.Split.Response(
       Arrays.asList(new ProductionPlanDetailEvents.SplitEvent(this.id)),
       split
     );
   }
 
-  public ProductionPlanDetailMessages.UpdateResponse apply(
-    ProductionPlanDetailMessages.UpdateRequest request) {
+  public ProductionPlanDetailMessages.Update.Response apply(
+    ProductionPlanDetailMessages.Update.Request request) {
     if (!isUpdatable()) {
       throw new ProductionPlanDetailExceptions.CannotUpdateException();
     }
@@ -158,37 +158,37 @@ public class ProductionPlanDetail implements Serializable {
     this.charger = request.getCharger();
     this.progressCompany = request.getProgressCompany();
     this.progressType = request.getProgressType();
-    return new ProductionPlanDetailMessages.UpdateResponse(
+    return new ProductionPlanDetailMessages.Update.Response(
       Arrays.asList(new ProductionPlanDetailEvents.UpdatedEvent(this.id))
     );
   }
 
-  public ProductionPlanDetailMessages.DetermineResponse apply(
-    ProductionPlanDetailMessages.DetermineRequest request) {
+  public ProductionPlanDetailMessages.Determine.Response apply(
+    ProductionPlanDetailMessages.Determine.Request request) {
     if (!isDeterminable()) {
       throw new ProductionPlanDetailExceptions.CannotDetermineException();
     }
     this.status = ProductionPlanDetailStatusKind.DETERMINED;
     this.determinedDate = OffsetDateTime.now();
-    return new ProductionPlanDetailMessages.DetermineResponse(
+    return new ProductionPlanDetailMessages.Determine.Response(
       Arrays.asList(new ProductionPlanDetailEvents.DeterminedEvent(this.id))
     );
   }
 
-  public ProductionPlanDetailMessages.ProgressResponse apply(
-    ProductionPlanDetailMessages.ProgressRequest request) {
+  public ProductionPlanDetailMessages.Progress.Response apply(
+    ProductionPlanDetailMessages.Progress.Request request) {
     if (!isProgressable()) {
       throw new ProductionPlanDetailExceptions.CannotProgressException();
     }
     this.progressedQuantity = this.progressedQuantity.add(request.getProgressedQuantity());
     this.status = ProductionPlanDetailStatusKind.IN_PROGRESS;
-    return new ProductionPlanDetailMessages.ProgressResponse(
+    return new ProductionPlanDetailMessages.Progress.Response(
       Arrays.asList(new ProductionPlanDetailEvents.ProgressedEvent(this.id))
     );
   }
 
-  public ProductionPlanDetailMessages.AddDependencyResponse apply(
-    ProductionPlanDetailMessages.AddDependencyRequest request) {
+  public ProductionPlanDetailMessages.AddDependency.Response apply(
+    ProductionPlanDetailMessages.AddDependency.Request request) {
     if (!isUpdatable()) {
       throw new ProductionPlanDetailExceptions.CannotUpdateException();
     }
@@ -203,13 +203,13 @@ public class ProductionPlanDetail implements Serializable {
       .map(ProductionPlanDetail::getOrder)
       .max(Comparator.comparing(i -> i))
       .orElse(0) + 1;
-    return new ProductionPlanDetailMessages.AddDependencyResponse(
+    return new ProductionPlanDetailMessages.AddDependency.Response(
       Arrays.asList(new ProductionPlanDetailEvents.UpdatedEvent(this.id))
     );
   }
 
-  public ProductionPlanDetailMessages.RescheduleResponse apply(
-    ProductionPlanDetailMessages.RescheduleRequest request) {
+  public ProductionPlanDetailMessages.Reschedule.Response apply(
+    ProductionPlanDetailMessages.Reschedule.Request request) {
     if (!isReschedulable()) {
       throw new ProductionPlanDetailExceptions.CannotRescheduleException();
     }
@@ -223,7 +223,7 @@ public class ProductionPlanDetail implements Serializable {
     }
     this.startDate = request.getStartDate();
     this.endDate = request.getEndDate();
-    return new ProductionPlanDetailMessages.RescheduleResponse(
+    return new ProductionPlanDetailMessages.Reschedule.Response(
       Arrays.asList(
         new ProductionPlanDetailEvents.RescheduledEvent(
           beforeStartDate,
@@ -234,8 +234,8 @@ public class ProductionPlanDetail implements Serializable {
     );
   }
 
-  public ProductionPlanDetailMessages.RescheduleByDependencyResponse apply(
-    ProductionPlanDetailMessages.RescheduleByDependencyRequest request) {
+  public ProductionPlanDetailMessages.RescheduleByDependency.Response apply(
+    ProductionPlanDetailMessages.RescheduleByDependency.Request request) {
     if (!isReschedulable()) {
       throw new ProductionPlanDetailExceptions.CannotRescheduleException();
     }
@@ -255,35 +255,45 @@ public class ProductionPlanDetail implements Serializable {
         )
       );
     }
-    return new ProductionPlanDetailMessages.RescheduleByDependencyResponse(events);
+    return new ProductionPlanDetailMessages.RescheduleByDependency.Response(events);
   }
 
-  public ProductionPlanDetailMessages.CancelResponse apply(
-    ProductionPlanDetailMessages.CancelRequest request) {
+  public ProductionPlanDetailMessages.Cancel.Response apply(
+    ProductionPlanDetailMessages.Cancel.Request request) {
     if (!isCancelable()) {
       throw new ProductionPlanDetailExceptions.CannotCancelException();
     }
     this.status = ProductionPlanDetailStatusKind.CANCELED;
     this.canceledDate = OffsetDateTime.now();
-    return new ProductionPlanDetailMessages.CancelResponse(
+    return new ProductionPlanDetailMessages.Cancel.Response(
       Arrays.asList(new ProductionPlanDetailEvents.CanceledEvent(this.id))
     );
   }
 
-  public ProductionPlanDetailMessages.CompleteResponse apply(
-    ProductionPlanDetailMessages.CompleteRequest request) {
+  public ProductionPlanDetailMessages.Complete.Response apply(
+    ProductionPlanDetailMessages.Complete.Request request) {
     if (!isCompletable()) {
       throw new ProductionPlanDetailExceptions.CannotCompleteException();
     }
     this.status = ProductionPlanDetailStatusKind.COMPLETED;
     this.completedDate = OffsetDateTime.now();
-    return new ProductionPlanDetailMessages.CompleteResponse(
+    return new ProductionPlanDetailMessages.Complete.Response(
       Arrays.asList(new ProductionPlanDetailEvents.CompletedEvent(this.id))
     );
   }
 
-  public ProductionPlanDetailMessages.RemoveDependencyResponse apply(
-    ProductionPlanDetailMessages.RemoveDependencyRequest request) {
+  public ProductionPlanDetailMessages.Delete.Response apply(
+    ProductionPlanDetailMessages.Delete.Request request) {
+    if (!isUpdatable()) {
+      throw new ProductionPlanDetailExceptions.CannotDeleteException();
+    }
+    return new ProductionPlanDetailMessages.Delete.Response(
+      Arrays.asList(new ProductionPlanDetailEvents.DeletedEvent(this.id))
+    );
+  }
+
+  public ProductionPlanDetailMessages.RemoveDependency.Response apply(
+    ProductionPlanDetailMessages.RemoveDependency.Request request) {
     if (!isUpdatable()) {
       throw new ProductionPlanDetailExceptions.CannotUpdateException();
     }
@@ -291,7 +301,7 @@ public class ProductionPlanDetail implements Serializable {
       throw new ProductionPlanDetailExceptions.CannotUpdateException();
     }
     this.dependencies.remove(request.getDependency());
-    return new ProductionPlanDetailMessages.RemoveDependencyResponse(
+    return new ProductionPlanDetailMessages.RemoveDependency.Response(
       Arrays.asList(new ProductionPlanDetailEvents.UpdatedEvent(this.id))
     );
   }

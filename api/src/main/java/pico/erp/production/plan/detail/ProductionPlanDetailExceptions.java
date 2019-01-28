@@ -47,6 +47,12 @@ public interface ProductionPlanDetailExceptions {
     private static final long serialVersionUID = 1L;
   }
 
+  @ResponseStatus(code = HttpStatus.NOT_ACCEPTABLE, reason = "production-plan-detail.cannot.delete.exception")
+  class CannotDeleteException extends RuntimeException {
+
+    private static final long serialVersionUID = 1L;
+  }
+
   @ResponseStatus(code = HttpStatus.NOT_ACCEPTABLE, reason = "production-plan-detail.cannot.reschedule.exception")
   class CannotRescheduleException extends RuntimeException {
 

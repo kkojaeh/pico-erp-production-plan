@@ -36,5 +36,7 @@ public interface ProductionPlanDetailService {
 
   void update(@Valid @NotNull ProductionPlanDetailRequests.UpdateRequest request);
 
+  void delete(@Valid @NotNull ProductionPlanDetailRequests.DeleteRequest request);
+
 
 }

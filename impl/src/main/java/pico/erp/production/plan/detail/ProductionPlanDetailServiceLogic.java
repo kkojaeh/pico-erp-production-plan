@@ -411,7 +411,8 @@ public class ProductionPlanDetailServiceLogic implements ProductionPlanDetailSer
           levelGaps.put(level, Math.max(preparationCount + processes.size(), levelGaps.get(level)));
         }
       });
-      this.maxDepth = levelGaps.values().stream().reduce(Long::sum).orElse(0L) + 1L;
+      //this.maxDepth = levelGaps.values().stream().reduce(Long::sum).orElse(0L) + 1L;
+      this.maxDepth = levelGaps.values().stream().reduce(Long::sum).orElse(0L);
       this.intervalHours = Math.max(ChronoUnit.HOURS.between(startDate, endDate) / maxDepth, 3);
       val levels = levelGaps.keySet();
       levels.forEach(level -> {

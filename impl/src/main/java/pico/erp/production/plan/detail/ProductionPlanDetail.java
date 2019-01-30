@@ -83,6 +83,8 @@ public class ProductionPlanDetail implements Serializable {
 
   int order;
 
+  boolean split;
+
   public ProductionPlanDetail() {
 
   }
@@ -104,6 +106,7 @@ public class ProductionPlanDetail implements Serializable {
     this.status = ProductionPlanDetailStatusKind.CREATED;
     this.dependencies = new HashSet<>();
     this.order = 0;
+    this.split = false;
     return new ProductionPlanDetailMessages.Create.Response(
       Arrays.asList(new ProductionPlanDetailEvents.CreatedEvent(this.id))
     );
@@ -136,6 +139,7 @@ public class ProductionPlanDetail implements Serializable {
     split.endDate = this.endDate;
     split.status = ProductionPlanDetailStatusKind.CREATED;
     split.dependencies = new HashSet<>(this.dependencies);
+    split.split = true;
 
     return new ProductionPlanDetailMessages.Split.Response(
       Arrays.asList(new ProductionPlanDetailEvents.SplitEvent(this.id)),
@@ -280,7 +284,7 @@ public class ProductionPlanDetail implements Serializable {
 
   public ProductionPlanDetailMessages.Delete.Response apply(
     ProductionPlanDetailMessages.Delete.Request request) {
-    if (!isUpdatable()) {
+    if (!isDeletable()) {
       throw new ProductionPlanDetailExceptions.CannotDeleteException();
     }
     return new ProductionPlanDetailMessages.Delete.Response(
@@ -300,16 +304,6 @@ public class ProductionPlanDetail implements Serializable {
     return new ProductionPlanDetailMessages.RemoveDependency.Response(
       Arrays.asList(new ProductionPlanDetailEvents.UpdatedEvent(this.id))
     );
-  }
-
-  public String getName() {
-    if (processPreparation != null) {
-      return "사전공정 " + processPreparation.getName();
-    } else if (process != null) {
-      return "공정 " + process.getName() + " : " + item.getName();
-    } else {
-      return item.getName();
-    }
   }
 
   public BigDecimal getPlannedQuantity() {
@@ -372,6 +366,10 @@ public class ProductionPlanDetail implements Serializable {
 
   public boolean isUpdatable() {
     return status.isUpdatable();
+  }
+
+  public boolean isDeletable() {
+    return status.isUpdatable() && split == true;
   }
 
 

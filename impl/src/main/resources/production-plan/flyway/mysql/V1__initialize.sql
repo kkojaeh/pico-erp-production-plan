@@ -45,6 +45,7 @@ create table prp_production_plan_detail (
 	progressed_quantity decimal(19,2),
 	quantity decimal(19,2),
 	spare_quantity decimal(19,2),
+	split bit not null,
 	start_date datetime,
 	status varchar(20),
 	primary key (id)

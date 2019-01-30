@@ -27,8 +27,6 @@ public class ProductionPlanDetailData {
 
   ProductionPlanId planId;
 
-  String name;
-
   ItemId itemId;
 
   ProcessId processId;
@@ -64,6 +62,22 @@ public class ProductionPlanDetailData {
   int order;
 
   List<ProductionPlanDetailId> dependencies;
+
+  public boolean cancelable;
+
+  public boolean completable;
+
+  public boolean determinable;
+
+  public boolean progressable;
+
+  public boolean reschedulable;
+
+  public boolean splittable;
+
+  public boolean updatable;
+
+  public boolean deletable;
 
 
   List<ProductionPlanDetailRequests.AddDependencyRequest> toAddDependencyRequests() {

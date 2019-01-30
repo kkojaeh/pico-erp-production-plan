@@ -117,6 +117,8 @@ public abstract class ProductionPlanDetailMapper {
       .progressType(entity.getProgressType())
       .order(entity.getOrder())
       .dependencies(entity.getDependencies().stream().map(this::map).collect(Collectors.toSet()))
+      .groupId(entity.getGroupId())
+      .split(entity.isSplit())
       .build();
   }
 

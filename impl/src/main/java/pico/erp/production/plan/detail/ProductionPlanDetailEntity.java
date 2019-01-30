@@ -161,6 +161,8 @@ public class ProductionPlanDetailEntity implements Serializable {
   @Column(name = "DEPENDENCY_ORDER")
   int order;
 
+  boolean split;
+
   /*
   @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinColumn(name = "PROJECT_ID")

@@ -82,6 +82,7 @@ public abstract class ProductionPlanMapper {
       .canceledDate(entity.getCanceledDate())
       .status(entity.getStatus())
       .progressRate(entity.getProgressRate())
+      .project(map(entity.getProjectId()))
       .build();
   }
 

@@ -14,7 +14,6 @@ import pico.erp.item.spec.ItemSpecId;
 import pico.erp.process.ProcessId;
 import pico.erp.process.preparation.ProcessPreparationId;
 import pico.erp.production.plan.ProductionPlanId;
-import pico.erp.user.UserId;
 
 @Builder
 @AllArgsConstructor
@@ -53,8 +52,6 @@ public class ProductionPlanDetailData {
   CompanyId progressCompanyId;
 
   OffsetDateTime completedDate;
-
-  UserId chargerId;
 
   ProductionPlanDetailProgressTypeKind progressType;
 

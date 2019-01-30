@@ -42,7 +42,6 @@ import pico.erp.process.preparation.ProcessPreparationId;
 import pico.erp.production.plan.ProductionPlanId;
 import pico.erp.shared.TypeDefinitions;
 import pico.erp.shared.data.Auditor;
-import pico.erp.user.UserId;
 
 @Entity(name = "ProductionPlanDetail")
 @Table(name = "PRP_PRODUCTION_PLAN_DETAIL", indexes = @Index(columnList = "PLAN_ID"))
@@ -102,11 +101,6 @@ public class ProductionPlanDetailEntity implements Serializable {
   OffsetDateTime canceledDate;
 
   OffsetDateTime determinedDate;
-
-  @AttributeOverrides({
-    @AttributeOverride(name = "value", column = @Column(name = "CHARGER_ID", length = TypeDefinitions.ID_LENGTH))
-  })
-  UserId chargerId;
 
   @Column(length = TypeDefinitions.ENUM_LENGTH)
   @Enumerated(EnumType.STRING)

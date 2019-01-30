@@ -1,6 +1,5 @@
 package pico.erp.production.plan.detail
 
-
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.context.annotation.ComponentScan
@@ -17,7 +16,6 @@ import pico.erp.production.plan.ProductionPlanRequests
 import pico.erp.production.plan.ProductionPlanService
 import pico.erp.project.ProjectId
 import pico.erp.shared.IntegrationConfiguration
-import pico.erp.user.UserId
 import spock.lang.Specification
 
 import java.time.OffsetDateTime
@@ -46,13 +44,12 @@ class ProductionPlanDetailServiceSpec extends Specification {
 
   def itemId = ItemId.from("item-1")
 
-  def chargerId = UserId.from("kjh")
-
   def progressCompanyId = CompanyId.from("CUST1")
 
   def projectId = ProjectId.from("sample-project1")
 
   def planStartDate = OffsetDateTime.now().plusDays(2)
+
   def planEndDate = planStartDate.plusDays(1)
 
   @Lazy
@@ -142,7 +139,6 @@ class ProductionPlanDetailServiceSpec extends Specification {
         spareQuantity: 10,
         startDate: planStartDate,
         endDate: planEndDate,
-        chargerId: chargerId,
         progressCompanyId: progressCompanyId,
         progressType: ProductionPlanDetailProgressTypeKind.PRODUCE
       )
@@ -157,7 +153,6 @@ class ProductionPlanDetailServiceSpec extends Specification {
         spareQuantity: 10,
         startDate: planEndDate.plusDays(1),
         endDate: planEndDate.plusDays(2),
-        chargerId: chargerId,
         progressCompanyId: progressCompanyId,
         progressType: ProductionPlanDetailProgressTypeKind.PRODUCE
       )
@@ -172,7 +167,7 @@ class ProductionPlanDetailServiceSpec extends Specification {
         spareQuantity: 10,
         startDate: planStartDate,
         endDate: planEndDate,
-        progressCompanyId: progressCompanyId,
+        progressCompanyId: null,
         progressType: ProductionPlanDetailProgressTypeKind.PRODUCE
       )
     )
@@ -325,7 +320,6 @@ class ProductionPlanDetailServiceSpec extends Specification {
 
     then:
     plan.plannedQuantity == 110
-    plan.chargerId == chargerId
     plan.progressCompanyId == progressCompanyId
     plan.progressType == ProductionPlanDetailProgressTypeKind.PRODUCE
   }

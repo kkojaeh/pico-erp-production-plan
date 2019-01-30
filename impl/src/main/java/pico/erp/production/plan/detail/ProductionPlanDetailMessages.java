@@ -20,7 +20,6 @@ import pico.erp.process.ProcessData;
 import pico.erp.process.preparation.ProcessPreparationData;
 import pico.erp.production.plan.ProductionPlan;
 import pico.erp.shared.event.Event;
-import pico.erp.user.UserData;
 
 public interface ProductionPlanDetailMessages {
 
@@ -102,8 +101,6 @@ public interface ProductionPlanDetailMessages {
       @Future
       @NotNull
       OffsetDateTime endDate;
-
-      UserData charger;
 
       CompanyData progressCompany;
 

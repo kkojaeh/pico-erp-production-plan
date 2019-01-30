@@ -17,7 +17,6 @@ import pico.erp.item.spec.ItemSpecId;
 import pico.erp.process.ProcessId;
 import pico.erp.process.preparation.ProcessPreparationId;
 import pico.erp.production.plan.ProductionPlanId;
-import pico.erp.user.UserId;
 
 public interface ProductionPlanDetailRequests {
 
@@ -90,8 +89,6 @@ public interface ProductionPlanDetailRequests {
     @Future
     @NotNull
     OffsetDateTime endDate;
-
-    UserId chargerId;
 
     CompanyId progressCompanyId;
 

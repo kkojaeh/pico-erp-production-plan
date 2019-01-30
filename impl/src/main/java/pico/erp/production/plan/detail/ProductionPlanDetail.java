@@ -27,7 +27,6 @@ import pico.erp.process.ProcessData;
 import pico.erp.process.preparation.ProcessPreparationData;
 import pico.erp.production.plan.ProductionPlan;
 import pico.erp.shared.event.Event;
-import pico.erp.user.UserData;
 
 /**
  * 주문 접수
@@ -75,8 +74,6 @@ public class ProductionPlanDetail implements Serializable {
   OffsetDateTime determinedDate;
 
   OffsetDateTime canceledDate;
-
-  UserData charger;
 
   ProductionPlanDetailProgressTypeKind progressType;
 
@@ -155,7 +152,6 @@ public class ProductionPlanDetail implements Serializable {
     this.spareQuantity = request.getSpareQuantity();
     this.startDate = request.getStartDate();
     this.endDate = request.getEndDate();
-    this.charger = request.getCharger();
     this.progressCompany = request.getProgressCompany();
     this.progressType = request.getProgressType();
     return new ProductionPlanDetailMessages.Update.Response(
@@ -359,8 +355,7 @@ public class ProductionPlanDetail implements Serializable {
   }
 
   public boolean isDeterminable() {
-    return status.isDeterminable() && this.progressCompany != null && this.progressType != null
-      && this.charger != null;
+    return status.isDeterminable() && this.progressCompany != null && this.progressType != null;
   }
 
   public boolean isProgressable() {

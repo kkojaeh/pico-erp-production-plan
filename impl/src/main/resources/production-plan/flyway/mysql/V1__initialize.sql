@@ -24,7 +24,6 @@ create table prp_production_plan (
 create table prp_production_plan_detail (
 	id binary(16) not null,
 	canceled_date datetime,
-	charger_id varchar(50),
 	completed_date datetime,
 	created_by_id varchar(50),
 	created_by_name varchar(50),

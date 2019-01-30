@@ -89,7 +89,6 @@ public abstract class ProductionPlanDetailMapper {
     @Mapping(target = "processId", source = "process.id"),
     @Mapping(target = "processPreparationId", source = "processPreparation.id"),
     @Mapping(target = "progressCompanyId", source = "progressCompany.id"),
-    @Mapping(target = "chargerId", source = "charger.id"),
     @Mapping(target = "createdBy", ignore = true),
     @Mapping(target = "createdDate", ignore = true),
     @Mapping(target = "lastModifiedBy", ignore = true),
@@ -115,7 +114,6 @@ public abstract class ProductionPlanDetailMapper {
       .completedDate(entity.getCompletedDate())
       .canceledDate(entity.getCanceledDate())
       .determinedDate(entity.getDeterminedDate())
-      .charger(map(entity.getChargerId()))
       .progressType(entity.getProgressType())
       .order(entity.getOrder())
       .dependencies(entity.getDependencies().stream().map(this::map).collect(Collectors.toSet()))
@@ -182,8 +180,7 @@ public abstract class ProductionPlanDetailMapper {
     @Mapping(target = "itemSpecId", source = "itemSpec.id"),
     @Mapping(target = "processId", source = "process.id"),
     @Mapping(target = "processPreparationId", source = "processPreparation.id"),
-    @Mapping(target = "progressCompanyId", source = "progressCompany.id"),
-    @Mapping(target = "chargerId", source = "charger.id")
+    @Mapping(target = "progressCompanyId", source = "progressCompany.id")
   })
   public abstract ProductionPlanDetailData map(ProductionPlanDetail item);
 
@@ -198,7 +195,6 @@ public abstract class ProductionPlanDetailMapper {
     ProductionPlanDetailRequests.CreateRequest request);
 
   @Mappings({
-    @Mapping(target = "charger", source = "chargerId"),
     @Mapping(target = "progressCompany", source = "progressCompanyId")
   })
   public abstract ProductionPlanDetailMessages.Update.Request map(

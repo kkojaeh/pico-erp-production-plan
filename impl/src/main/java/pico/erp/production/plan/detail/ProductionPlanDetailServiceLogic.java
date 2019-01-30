@@ -411,8 +411,7 @@ public class ProductionPlanDetailServiceLogic implements ProductionPlanDetailSer
           levelGaps.put(level, Math.max(preparationCount + processes.size(), levelGaps.get(level)));
         }
       });
-      //this.maxDepth = levelGaps.values().stream().reduce(Long::sum).orElse(0L) + 1L;
-      this.maxDepth = levelGaps.values().stream().reduce(Long::sum).orElse(0L);
+      this.maxDepth = levelGaps.values().stream().reduce(Long::sum).orElse(0L) + 1L;
       this.intervalHours = Math.max(ChronoUnit.HOURS.between(startDate, endDate) / maxDepth, 3);
       val levels = levelGaps.keySet();
       levels.forEach(level -> {
@@ -432,7 +431,7 @@ public class ProductionPlanDetailServiceLogic implements ProductionPlanDetailSer
     }
 
     OffsetDateTime getEndDate(long depth) {
-      return startDate.plusHours((maxDepth - depth + 1) * intervalHours)
+      return startDate.plusHours((maxDepth - depth) * intervalHours)
         .minusMinutes(gapMinutes());
     }
 
@@ -451,7 +450,7 @@ public class ProductionPlanDetailServiceLogic implements ProductionPlanDetailSer
     }
 
     OffsetDateTime getStartDate(long depth) {
-      return startDate.plusHours((maxDepth - depth) * intervalHours)
+      return startDate.plusHours((maxDepth - depth - 1) * intervalHours)
         .plusMinutes(gapMinutes());
     }
 

@@ -94,6 +94,7 @@ public class ProductionPlanDetailData {
       .id(id)
       .planId(planId)
       .itemId(itemId)
+      .itemSpecId(itemSpecId)
       .processId(processId)
       .processPreparationId(processPreparationId)
       .quantity(quantity)

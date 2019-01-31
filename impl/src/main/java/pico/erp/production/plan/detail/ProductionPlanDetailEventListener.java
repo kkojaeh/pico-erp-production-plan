@@ -45,4 +45,19 @@ public class ProductionPlanDetailEventListener {
     );
   }
 
+  /**
+   * 계획이 취소되면 상세 계획 모두 취소 됨
+   */
+  @EventListener
+  @JmsListener(destination = LISTENER_NAME + "." + ProductionPlanEvents.CanceledEvent.CHANNEL)
+  public void onPlanCanceled(ProductionPlanEvents.CanceledEvent event) {
+    planDetailService.getAll(event.getProductionPlanId()).forEach(detail -> {
+      planDetailService.cancel(
+        ProductionPlanDetailRequests.CancelRequest.builder()
+          .id(detail.getId())
+          .build()
+      );
+    });
+  }
+
 }

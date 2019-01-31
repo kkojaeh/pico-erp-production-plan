@@ -26,6 +26,9 @@ public class ProductionPlanEventListener {
   @Autowired
   private ProductionPlanDetailServiceLogic planDetailService;
 
+  /**
+   * 상세 계획이 모두 확정되면 계획을 준비 완료로 변경 시킴
+   */
   @EventListener
   @JmsListener(destination = LISTENER_NAME + "."
     + ProductionPlanDetailEvents.DeterminedEvent.CHANNEL)

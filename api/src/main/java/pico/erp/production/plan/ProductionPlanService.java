@@ -19,6 +19,8 @@ public interface ProductionPlanService {
 
   void progress(@Valid @NotNull ProductionPlanRequests.ProgressRequest request);
 
+  void prepare(@Valid @NotNull ProductionPlanRequests.PrepareRequest request);
+
   void update(@Valid @NotNull ProductionPlanRequests.UpdateRequest request);
 
 

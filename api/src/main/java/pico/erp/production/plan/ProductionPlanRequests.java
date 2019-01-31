@@ -88,6 +88,18 @@ public interface ProductionPlanRequests {
   @NoArgsConstructor
   @AllArgsConstructor
   @Builder
+  class PrepareRequest {
+
+    @Valid
+    @NotNull
+    ProductionPlanId id;
+
+  }
+
+  @Data
+  @NoArgsConstructor
+  @AllArgsConstructor
+  @Builder
   class DetermineRequest {
 
     @Valid

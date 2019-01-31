@@ -102,6 +102,22 @@ public interface ProductionPlanMessages {
 
   }
 
+  interface Prepare {
+
+    @Data
+    class Request {
+
+    }
+
+    @Value
+    class Response {
+
+      Collection<Event> events;
+
+    }
+
+  }
+
   interface Complete {
 
     @Data

@@ -154,6 +154,12 @@ public abstract class ProductionPlanMapper {
   public abstract ProductionPlanMessages.Determine.Request map(
     ProductionPlanRequests.DetermineRequest request);
 
+
+  @Mappings({
+  })
+  public abstract ProductionPlanMessages.Prepare.Request map(
+    ProductionPlanRequests.PrepareRequest request);
+
   @Mappings({
   })
   public abstract ProductionPlanMessages.Complete.Request map(

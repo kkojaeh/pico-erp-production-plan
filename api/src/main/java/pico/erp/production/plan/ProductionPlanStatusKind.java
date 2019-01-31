@@ -12,6 +12,11 @@ public enum ProductionPlanStatusKind implements LocalizedNameable {
   CREATED,
 
   /**
+   * 준비됨
+   */
+  PREPARED,
+
+  /**
    * 확정 함
    */
   DETERMINED,
@@ -32,7 +37,7 @@ public enum ProductionPlanStatusKind implements LocalizedNameable {
   COMPLETED;
 
   public boolean isCancelable() {
-    return this == CREATED || this == DETERMINED;
+    return this == CREATED || this == PREPARED;
   }
 
   public boolean isCompletable() {
@@ -40,7 +45,7 @@ public enum ProductionPlanStatusKind implements LocalizedNameable {
   }
 
   public boolean isDeterminable() {
-    return this == CREATED;
+    return this == PREPARED;
   }
 
   public boolean isProgressable() {
@@ -48,6 +53,10 @@ public enum ProductionPlanStatusKind implements LocalizedNameable {
   }
 
   public boolean isUpdatable() {
+    return this == CREATED;
+  }
+
+  public boolean isPreparable() {
     return this == CREATED;
   }
 

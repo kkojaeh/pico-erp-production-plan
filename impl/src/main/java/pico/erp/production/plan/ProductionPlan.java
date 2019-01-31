@@ -116,6 +116,17 @@ public class ProductionPlan implements Serializable {
     );
   }
 
+  public ProductionPlanMessages.Prepare.Response apply(
+    ProductionPlanMessages.Prepare.Request request) {
+    if (!isPreparable()) {
+      throw new ProductionPlanExceptions.CannotPrepareException();
+    }
+    this.status = ProductionPlanStatusKind.PREPARED;
+    return new ProductionPlanMessages.Prepare.Response(
+      Arrays.asList(new ProductionPlanEvents.PreparedEvent(this.id))
+    );
+  }
+
   public ProductionPlanMessages.Complete.Response apply(
     ProductionPlanMessages.Complete.Request request) {
     if (!isCompletable()) {
@@ -163,6 +174,10 @@ public class ProductionPlan implements Serializable {
 
   public boolean isUpdatable() {
     return status.isUpdatable();
+  }
+
+  public boolean isPreparable() {
+    return status.isPreparable();
   }
 
 

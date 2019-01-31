@@ -47,4 +47,6 @@ public class ProductionPlanData {
 
   boolean completable;
 
+  boolean preparable;
+
 }

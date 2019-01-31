@@ -40,6 +40,21 @@ public interface ProductionPlanEvents {
   @Data
   @AllArgsConstructor
   @NoArgsConstructor
+  class PreparedEvent implements Event {
+
+    public final static String CHANNEL = "event.production-plan.prepared";
+
+    private ProductionPlanId productionPlanId;
+
+    public String channel() {
+      return CHANNEL;
+    }
+
+  }
+
+  @Data
+  @AllArgsConstructor
+  @NoArgsConstructor
   class DeterminedEvent implements Event {
 
     public final static String CHANNEL = "event.production-plan.determined";

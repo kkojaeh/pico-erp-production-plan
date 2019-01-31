@@ -10,7 +10,6 @@ import pico.erp.audit.AuditService;
 import pico.erp.production.plan.ProductionPlanRequests.CancelRequest;
 import pico.erp.production.plan.ProductionPlanRequests.CompleteRequest;
 import pico.erp.production.plan.ProductionPlanRequests.DetermineRequest;
-import pico.erp.production.plan.ProductionPlanRequests.ProgressRequest;
 import pico.erp.shared.Public;
 import pico.erp.shared.event.EventPublisher;
 
@@ -90,7 +89,17 @@ public class ProductionPlanServiceLogic implements ProductionPlanService {
   }
 
   @Override
-  public void progress(ProgressRequest request) {
+  public void prepare(ProductionPlanRequests.PrepareRequest request) {
+    val plan = productionPlanRepository.findBy(request.getId())
+      .orElseThrow(ProductionPlanExceptions.NotFoundException::new);
+    val response = plan.apply(mapper.map(request));
+    productionPlanRepository.update(plan);
+    auditService.commit(plan);
+    eventPublisher.publishEvents(response.getEvents());
+  }
+
+  @Override
+  public void progress(ProductionPlanRequests.ProgressRequest request) {
     val plan = productionPlanRepository.findBy(request.getId())
       .orElseThrow(ProductionPlanExceptions.NotFoundException::new);
     val response = plan.apply(mapper.map(request));

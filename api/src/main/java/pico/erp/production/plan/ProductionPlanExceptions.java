@@ -35,6 +35,12 @@ public interface ProductionPlanExceptions {
     private static final long serialVersionUID = 1L;
   }
 
+  @ResponseStatus(code = HttpStatus.NOT_ACCEPTABLE, reason = "production-plan.cannot.prepare.exception")
+  class CannotPrepareException extends RuntimeException {
+
+    private static final long serialVersionUID = 1L;
+  }
+
   @ResponseStatus(code = HttpStatus.NOT_ACCEPTABLE, reason = "production-plan.cannot.complete.exception")
   class CannotCompleteException extends RuntimeException {
 

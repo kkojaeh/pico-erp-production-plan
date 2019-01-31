@@ -250,6 +250,7 @@ public class ProductionPlanDetailServiceLogic implements ProductionPlanDetailSer
         .id(ProductionPlanDetailId.generate())
         .planId(context.getPlan().getId())
         .itemId(bom.getItemId())
+        .itemSpecId(bom.getItemSpecId())
         .processId(null)
         .processPreparationId(null)
         .quantity(context.getQuantity(bom))

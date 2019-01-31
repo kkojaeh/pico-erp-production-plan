@@ -146,8 +146,12 @@ public class ProductionPlanDetailServiceLogic implements ProductionPlanDetailSer
       .filter(data -> data.getDependencies().contains(target.getId()));
   }
 
-  private ProductionPlanDetailData generate(ProcessData process, BomData bom, long depth,
+  private ProductionPlanDetailData generate(ProcessData process, BigDecimal spareRatio, BomData bom,
+    long depth,
     GenerateContext context) {
+
+    val quantity = context.getQuantity(bom);
+    val spareQuantity = context.getSpareQuantity(bom);
 
     val detail = ProductionPlanDetailData.builder()
       .id(ProductionPlanDetailId.generate())
@@ -155,8 +159,8 @@ public class ProductionPlanDetailServiceLogic implements ProductionPlanDetailSer
       .itemId(bom.getItemId())
       .processId(process.getId())
       .processPreparationId(null)
-      .quantity(context.getQuantity(bom))
-      .spareQuantity(context.getSpareQuantity(bom))
+      .quantity(quantity.add(quantity.multiply(spareRatio)))
+      .spareQuantity(spareQuantity.add(spareQuantity.multiply(spareRatio)))
       .startDate(context.getStartDate(depth))
       .endDate(context.getEndDate(depth))
       .build();
@@ -264,8 +268,15 @@ public class ProductionPlanDetailServiceLogic implements ProductionPlanDetailSer
       ProductionPlanDetailData previous = null;
       for (int i = 0; i < processes.size(); i++) {
         val process = processes.get(i);
+        val spareRatio = processes.subList(0, i + 1).stream()
+          .map(ProcessData::getLossRate)
+          .reduce(BigDecimal.ONE, (acc, curr) -> curr.add(BigDecimal.ONE).multiply(acc))
+          .subtract(BigDecimal.ONE)
+          .setScale(5, BigDecimal.ROUND_HALF_UP);
+        // 이전 lossRate 계산하여 전
         val processDepth = depth + context.levelToGap(level) - i - 1;
-        ProductionPlanDetailData generated = generate(process, bom, processDepth, context);
+        ProductionPlanDetailData generated = generate(process, spareRatio, bom, processDepth,
+          context);
         if (previous != null) {
           generated.setDependencies(Arrays.asList(previous.getId()));
         }
@@ -462,6 +473,7 @@ public class ProductionPlanDetailServiceLogic implements ProductionPlanDetailSer
     long levelToGap(long level) {
       return levelGaps.get(level);
     }
+
   }
 
 }

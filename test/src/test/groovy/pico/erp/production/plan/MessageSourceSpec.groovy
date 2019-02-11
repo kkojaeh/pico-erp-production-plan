@@ -40,7 +40,7 @@ class MessageSourceSpec extends Specification {
     println messages
 
     then:
-    messages.size() == 5
+    messages.size() == 6
   }
 
   def "생산 상세 계획 상태"() {

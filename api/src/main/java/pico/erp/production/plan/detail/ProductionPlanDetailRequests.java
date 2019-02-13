@@ -13,6 +13,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import pico.erp.company.CompanyId;
 import pico.erp.item.ItemId;
+import pico.erp.item.spec.ItemSpecCode;
 import pico.erp.item.spec.ItemSpecId;
 import pico.erp.process.ProcessId;
 import pico.erp.process.preparation.ProcessPreparationId;
@@ -45,6 +46,9 @@ public interface ProductionPlanDetailRequests {
 
     @Valid
     ItemSpecId itemSpecId;
+
+    @Valid
+    ItemSpecCode itemSpecCode;
 
     @NotNull
     @Min(0)

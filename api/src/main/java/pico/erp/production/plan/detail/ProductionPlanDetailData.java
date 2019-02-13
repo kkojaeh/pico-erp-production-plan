@@ -10,6 +10,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import pico.erp.company.CompanyId;
 import pico.erp.item.ItemId;
+import pico.erp.item.spec.ItemSpecCode;
 import pico.erp.item.spec.ItemSpecId;
 import pico.erp.process.ProcessId;
 import pico.erp.process.preparation.ProcessPreparationId;
@@ -28,6 +29,8 @@ public class ProductionPlanDetailData {
   ProductionPlanId planId;
 
   ItemId itemId;
+
+  ItemSpecCode itemSpecCode;
 
   ProcessId processId;
 
@@ -94,6 +97,7 @@ public class ProductionPlanDetailData {
       .id(id)
       .planId(planId)
       .itemId(itemId)
+      .itemSpecCode(itemSpecCode)
       .itemSpecId(itemSpecId)
       .processId(processId)
       .processPreparationId(processPreparationId)

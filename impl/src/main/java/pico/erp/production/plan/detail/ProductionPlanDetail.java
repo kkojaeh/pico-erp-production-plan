@@ -22,6 +22,7 @@ import lombok.val;
 import pico.erp.audit.annotation.Audit;
 import pico.erp.company.CompanyData;
 import pico.erp.item.ItemData;
+import pico.erp.item.spec.ItemSpecCode;
 import pico.erp.item.spec.ItemSpecData;
 import pico.erp.process.ProcessData;
 import pico.erp.process.preparation.ProcessPreparationData;
@@ -50,6 +51,8 @@ public class ProductionPlanDetail implements Serializable {
   ProductionPlan plan;
 
   ItemData item;
+
+  ItemSpecCode itemSpecCode;
 
   ProcessData process;
 
@@ -95,6 +98,7 @@ public class ProductionPlanDetail implements Serializable {
     this.groupId = ProductionPlanDetailGroupId.generate();
     this.plan = request.getPlan();
     this.item = request.getItem();
+    this.itemSpecCode = request.getItemSpecCode();
     this.process = request.getProcess();
     this.processPreparation = request.getProcessPreparation();
     this.itemSpec = request.getItemSpec();
@@ -129,6 +133,7 @@ public class ProductionPlanDetail implements Serializable {
     split.groupId = this.groupId;
     split.plan = this.plan;
     split.item = this.item;
+    split.itemSpecCode = this.itemSpecCode;
     split.process = this.process;
     split.processPreparation = this.processPreparation;
     split.itemSpec = this.itemSpec;

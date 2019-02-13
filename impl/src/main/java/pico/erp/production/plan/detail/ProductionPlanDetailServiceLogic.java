@@ -22,6 +22,8 @@ import pico.erp.bom.BomData;
 import pico.erp.bom.BomHierarchyData;
 import pico.erp.bom.BomId;
 import pico.erp.bom.BomService;
+import pico.erp.item.spec.ItemSpecCode;
+import pico.erp.item.spec.ItemSpecService;
 import pico.erp.process.ProcessData;
 import pico.erp.process.ProcessService;
 import pico.erp.process.preparation.ProcessPreparationData;
@@ -58,6 +60,10 @@ public class ProductionPlanDetailServiceLogic implements ProductionPlanDetailSer
   @Lazy
   @Autowired
   private BomService bomService;
+
+  @Lazy
+  @Autowired
+  private ItemSpecService itemSpecService;
 
   @Autowired
   private ProductionPlanProperties properties;
@@ -157,6 +163,7 @@ public class ProductionPlanDetailServiceLogic implements ProductionPlanDetailSer
       .id(ProductionPlanDetailId.generate())
       .planId(context.getPlan().getId())
       .itemId(bom.getItemId())
+      .itemSpecCode(process.getItemSpecCode())
       .processId(process.getId())
       .processPreparationId(null)
       .quantity(quantity.add(quantity.multiply(spareRatio)))
@@ -211,6 +218,7 @@ public class ProductionPlanDetailServiceLogic implements ProductionPlanDetailSer
           .id(ProductionPlanDetailId.generate())
           .planId(plan.getId())
           .itemId(plan.getItemId())
+          .itemSpecCode(ItemSpecCode.NOT_APPLICABLE)
           .quantity(plan.getQuantity())
           .spareQuantity(plan.getSpareQuantity())
           .startDate(startDate)
@@ -250,11 +258,15 @@ public class ProductionPlanDetailServiceLogic implements ProductionPlanDetailSer
     val processes = processService.getAll(bom.getItemId());
     val depth = context.levelToDepth(level);
     if (processes.isEmpty()) {
+      val itemSpecCode =
+        bom.getItemSpecId() != null ? itemSpecService.get(bom.getItemSpecId()).getCode()
+          : ItemSpecCode.NOT_APPLICABLE;
       val detail = ProductionPlanDetailData.builder()
         .id(ProductionPlanDetailId.generate())
         .planId(context.getPlan().getId())
         .itemId(bom.getItemId())
         .itemSpecId(bom.getItemSpecId())
+        .itemSpecCode(itemSpecCode)
         .processId(null)
         .processPreparationId(null)
         .quantity(context.getQuantity(bom))

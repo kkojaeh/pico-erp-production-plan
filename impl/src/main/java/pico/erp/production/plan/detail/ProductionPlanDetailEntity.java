@@ -36,6 +36,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import pico.erp.company.CompanyId;
 import pico.erp.item.ItemId;
+import pico.erp.item.spec.ItemSpecCode;
 import pico.erp.item.spec.ItemSpecId;
 import pico.erp.process.ProcessId;
 import pico.erp.process.preparation.ProcessPreparationId;
@@ -77,6 +78,11 @@ public class ProductionPlanDetailEntity implements Serializable {
     @AttributeOverride(name = "value", column = @Column(name = "ITEM_SPEC_ID", length = TypeDefinitions.UUID_BINARY_LENGTH))
   })
   ItemSpecId itemSpecId;
+
+  @AttributeOverrides({
+    @AttributeOverride(name = "value", column = @Column(name = "ITEM_SPEC_CODE", length = TypeDefinitions.CODE_LENGTH))
+  })
+  ItemSpecCode itemSpecCode;
 
   @Column(precision = 19, scale = 2)
   BigDecimal quantity;

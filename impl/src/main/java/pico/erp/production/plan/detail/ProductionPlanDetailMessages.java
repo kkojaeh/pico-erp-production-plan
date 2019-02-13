@@ -15,6 +15,7 @@ import lombok.Value;
 import org.hibernate.validator.constraints.ScriptAssert;
 import pico.erp.company.CompanyData;
 import pico.erp.item.ItemData;
+import pico.erp.item.spec.ItemSpecCode;
 import pico.erp.item.spec.ItemSpecData;
 import pico.erp.process.ProcessData;
 import pico.erp.process.preparation.ProcessPreparationData;
@@ -45,6 +46,10 @@ public interface ProductionPlanDetailMessages {
       @Valid
       @NotNull
       ItemData item;
+
+      @Valid
+      @NotNull
+      ItemSpecCode itemSpecCode;
 
       ProcessData process;
 

@@ -11,7 +11,6 @@ spring:
       maximum-pool-size: 3
 
 flyway:
-  enabled: false
   locations: classpath:production-plan/flyway/{vendor}
   table: flyway_schema_history_production_plan
   encoding: UTF-8

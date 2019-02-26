@@ -8,10 +8,9 @@ spring:
       hibernate.dialect.storage_engine: innodb
   datasource:
     hikari:
-      maximum-pool-size: 6
+      maximum-pool-size: 4
 
 flyway:
-  enabled: false
   locations: classpath:production-plan/flyway/{vendor}
   table: flyway_schema_history_production_plan
   encoding: UTF-8

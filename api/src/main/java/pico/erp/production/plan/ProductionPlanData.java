@@ -5,6 +5,7 @@ import java.time.OffsetDateTime;
 import lombok.Data;
 import pico.erp.item.ItemId;
 import pico.erp.project.ProjectId;
+import pico.erp.shared.data.UnitKind;
 
 @Data
 public class ProductionPlanData {
@@ -36,6 +37,8 @@ public class ProductionPlanData {
   ProductionPlanStatusKind status;
 
   BigDecimal progressRate;
+
+  UnitKind unit;
 
   boolean updatable;
 

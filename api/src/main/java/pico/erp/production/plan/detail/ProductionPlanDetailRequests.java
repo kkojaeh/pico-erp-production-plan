@@ -20,6 +20,7 @@ import pico.erp.item.spec.ItemSpecId;
 import pico.erp.process.ProcessId;
 import pico.erp.process.preparation.ProcessPreparationId;
 import pico.erp.production.plan.ProductionPlanId;
+import pico.erp.shared.data.UnitKind;
 
 public interface ProductionPlanDetailRequests {
 
@@ -68,6 +69,9 @@ public interface ProductionPlanDetailRequests {
     @NotNull
     OffsetDateTime endDate;
 
+    @NotNull
+    UnitKind unit;
+
     public static CreateRequest from(ProductionPlanDetailData data) {
       return CreateRequest.builder()
         .id(data.getId())
@@ -81,6 +85,7 @@ public interface ProductionPlanDetailRequests {
         .spareQuantity(data.getSpareQuantity())
         .startDate(data.getStartDate())
         .endDate(data.getEndDate())
+        .unit(data.getUnit())
         .build();
     }
 

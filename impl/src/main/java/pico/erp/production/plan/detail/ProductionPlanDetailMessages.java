@@ -21,6 +21,7 @@ import pico.erp.item.spec.ItemSpecId;
 import pico.erp.process.ProcessId;
 import pico.erp.process.preparation.ProcessPreparationId;
 import pico.erp.production.plan.ProductionPlan;
+import pico.erp.shared.data.UnitKind;
 import pico.erp.shared.event.Event;
 
 public interface ProductionPlanDetailMessages {
@@ -74,6 +75,9 @@ public interface ProductionPlanDetailMessages {
       @Future
       @NotNull
       OffsetDateTime endDate;
+
+      @NotNull
+      UnitKind unit;
 
     }
 

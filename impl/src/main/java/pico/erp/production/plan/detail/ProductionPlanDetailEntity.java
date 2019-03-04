@@ -43,6 +43,7 @@ import pico.erp.process.preparation.ProcessPreparationId;
 import pico.erp.production.plan.ProductionPlanId;
 import pico.erp.shared.TypeDefinitions;
 import pico.erp.shared.data.Auditor;
+import pico.erp.shared.data.UnitKind;
 
 @Entity(name = "ProductionPlanDetail")
 @Table(name = "PRP_PRODUCTION_PLAN_DETAIL", indexes = @Index(columnList = "PLAN_ID"))
@@ -173,6 +174,10 @@ public class ProductionPlanDetailEntity implements Serializable {
   int order;
 
   boolean split;
+
+  @Column(length = TypeDefinitions.ENUM_LENGTH)
+  @Enumerated(EnumType.STRING)
+  UnitKind unit;
 
   /*
   @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)

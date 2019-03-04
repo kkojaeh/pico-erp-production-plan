@@ -115,6 +115,7 @@ public abstract class ProductionPlanDetailMapper {
       .dependencies(entity.getDependencies().stream().map(this::map).collect(Collectors.toSet()))
       .groupId(entity.getGroupId())
       .split(entity.isSplit())
+      .unit(entity.getUnit())
       .build();
   }
 

@@ -13,6 +13,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import pico.erp.item.ItemId;
 import pico.erp.project.ProjectId;
+import pico.erp.shared.data.UnitKind;
 
 public interface ProductionPlanRequests {
 
@@ -45,6 +46,9 @@ public interface ProductionPlanRequests {
     @Future
     @NotNull
     OffsetDateTime dueDate;
+
+    @NotNull
+    UnitKind unit;
 
   }
 

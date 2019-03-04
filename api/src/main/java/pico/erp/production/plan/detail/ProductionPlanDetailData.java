@@ -14,6 +14,7 @@ import pico.erp.item.spec.ItemSpecId;
 import pico.erp.process.ProcessId;
 import pico.erp.process.preparation.ProcessPreparationId;
 import pico.erp.production.plan.ProductionPlanId;
+import pico.erp.shared.data.UnitKind;
 
 @Builder
 @AllArgsConstructor
@@ -64,6 +65,8 @@ public class ProductionPlanDetailData {
   OffsetDateTime canceledDate;
 
   int order;
+
+  UnitKind unit;
 
   List<ProductionPlanDetailId> dependencies;
 

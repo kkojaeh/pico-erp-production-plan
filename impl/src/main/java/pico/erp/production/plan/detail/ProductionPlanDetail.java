@@ -28,6 +28,7 @@ import pico.erp.item.spec.ItemSpecId;
 import pico.erp.process.ProcessId;
 import pico.erp.process.preparation.ProcessPreparationId;
 import pico.erp.production.plan.ProductionPlan;
+import pico.erp.shared.data.UnitKind;
 import pico.erp.shared.event.Event;
 
 /**
@@ -84,6 +85,8 @@ public class ProductionPlanDetail implements Serializable {
 
   ProductionPlanDetailStatusKind status;
 
+  UnitKind unit;
+
   Set<ProductionPlanDetail> dependencies;
 
   int order;
@@ -113,6 +116,7 @@ public class ProductionPlanDetail implements Serializable {
     this.dependencies = new HashSet<>();
     this.order = 0;
     this.split = false;
+    this.unit = request.getUnit();
     return new ProductionPlanDetailMessages.Create.Response(
       Arrays.asList(new ProductionPlanDetailEvents.CreatedEvent(this.id))
     );
@@ -147,6 +151,7 @@ public class ProductionPlanDetail implements Serializable {
     split.status = ProductionPlanDetailStatusKind.CREATED;
     split.dependencies = new HashSet<>(this.dependencies);
     split.split = true;
+    split.unit = this.unit;
 
     return new ProductionPlanDetailMessages.Split.Response(
       Arrays.asList(new ProductionPlanDetailEvents.SplitEvent(this.id)),

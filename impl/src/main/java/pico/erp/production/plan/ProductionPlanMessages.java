@@ -12,6 +12,7 @@ import lombok.Data;
 import lombok.Value;
 import pico.erp.item.ItemId;
 import pico.erp.project.ProjectId;
+import pico.erp.shared.data.UnitKind;
 import pico.erp.shared.event.Event;
 
 public interface ProductionPlanMessages {
@@ -47,6 +48,10 @@ public interface ProductionPlanMessages {
 
       @NotNull
       ProductionPlanCodeGenerator codeGenerator;
+
+      @Valid
+      @NotNull
+      UnitKind unit;
 
     }
 

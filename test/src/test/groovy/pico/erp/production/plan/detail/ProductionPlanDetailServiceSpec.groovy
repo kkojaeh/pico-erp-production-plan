@@ -17,6 +17,7 @@ import pico.erp.production.plan.ProductionPlanRequests
 import pico.erp.production.plan.ProductionPlanService
 import pico.erp.project.ProjectId
 import pico.erp.shared.IntegrationConfiguration
+import pico.erp.shared.data.UnitKind
 import spock.lang.Specification
 
 import java.time.OffsetDateTime
@@ -53,6 +54,8 @@ class ProductionPlanDetailServiceSpec extends Specification {
 
   def planEndDate = planStartDate.plusDays(1)
 
+  def unit = UnitKind.EA
+
   @Lazy
   @Autowired
   BomService bomService
@@ -66,7 +69,8 @@ class ProductionPlanDetailServiceSpec extends Specification {
         quantity: 100,
         spareQuantity: 10,
         projectId: projectId,
-        dueDate: OffsetDateTime.now().plusDays(7)
+        dueDate: OffsetDateTime.now().plusDays(7),
+        unit: unit
       )
     )
     planService.create(
@@ -76,7 +80,8 @@ class ProductionPlanDetailServiceSpec extends Specification {
         quantity: 100,
         spareQuantity: 10,
         projectId: projectId,
-        dueDate: OffsetDateTime.now().plusDays(7)
+        dueDate: OffsetDateTime.now().plusDays(7),
+        unit: unit
       )
     )
     planDetailService.create(
@@ -87,7 +92,8 @@ class ProductionPlanDetailServiceSpec extends Specification {
         quantity: 100,
         spareQuantity: 10,
         startDate: planStartDate,
-        endDate: planEndDate
+        endDate: planEndDate,
+        unit: unit
       )
     )
   }
@@ -101,7 +107,8 @@ class ProductionPlanDetailServiceSpec extends Specification {
         quantity: 100,
         spareQuantity: 10,
         startDate: planEndDate.plusDays(1),
-        endDate: planEndDate.plusDays(2)
+        endDate: planEndDate.plusDays(2),
+        unit: unit
       )
     )
   }

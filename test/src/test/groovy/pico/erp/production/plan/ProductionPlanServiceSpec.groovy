@@ -11,6 +11,7 @@ import pico.erp.company.CompanyId
 import pico.erp.item.ItemId
 import pico.erp.project.ProjectId
 import pico.erp.shared.IntegrationConfiguration
+import pico.erp.shared.data.UnitKind
 import spock.lang.Specification
 
 import java.time.OffsetDateTime
@@ -36,6 +37,8 @@ class ProductionPlanServiceSpec extends Specification {
 
   def actorId = CompanyId.from("CUST1")
 
+  def unit = UnitKind.EA
+
   def planDueDate = OffsetDateTime.now().plusDays(2)
 
 
@@ -47,7 +50,8 @@ class ProductionPlanServiceSpec extends Specification {
         quantity: 100,
         spareQuantity: 10,
         projectId: projectId,
-        dueDate: planDueDate
+        dueDate: planDueDate,
+        unit: unit
       )
     )
   }

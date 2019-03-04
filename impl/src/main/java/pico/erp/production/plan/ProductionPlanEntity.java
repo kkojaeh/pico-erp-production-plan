@@ -31,6 +31,7 @@ import pico.erp.item.ItemId;
 import pico.erp.project.ProjectId;
 import pico.erp.shared.TypeDefinitions;
 import pico.erp.shared.data.Auditor;
+import pico.erp.shared.data.UnitKind;
 
 @Entity(name = "ProductionPlan")
 @Table(name = "PRP_PRODUCTION_PLAN")
@@ -76,6 +77,10 @@ public class ProductionPlanEntity implements Serializable {
 
   @Column(precision = 19, scale = 2)
   BigDecimal completedQuantity;
+
+  @Column(length = TypeDefinitions.ENUM_LENGTH)
+  @Enumerated(EnumType.STRING)
+  UnitKind unit;
 
   OffsetDateTime dueDate;
 

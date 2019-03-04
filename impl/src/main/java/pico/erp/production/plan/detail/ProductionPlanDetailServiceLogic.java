@@ -21,6 +21,7 @@ import pico.erp.bom.BomData;
 import pico.erp.bom.BomHierarchyData;
 import pico.erp.bom.BomId;
 import pico.erp.bom.BomService;
+import pico.erp.item.ItemService;
 import pico.erp.item.spec.ItemSpecCode;
 import pico.erp.item.spec.ItemSpecService;
 import pico.erp.process.ProcessData;
@@ -34,6 +35,7 @@ import pico.erp.production.plan.ProductionPlanService;
 import pico.erp.production.plan.detail.ProductionPlanDetailRequests.GenerateRequest;
 import pico.erp.production.plan.detail.ProductionPlanDetailRequests.RescheduleByDependencyRequest;
 import pico.erp.shared.Public;
+import pico.erp.shared.data.UnitKind;
 import pico.erp.shared.event.Event;
 import pico.erp.shared.event.EventPublisher;
 
@@ -60,6 +62,10 @@ public class ProductionPlanDetailServiceLogic implements ProductionPlanDetailSer
   @Lazy
   @Autowired
   private ItemSpecService itemSpecService;
+
+  @Lazy
+  @Autowired
+  private ItemService itemService;
 
   @Autowired
   private ProductionPlanProperties properties;
@@ -161,6 +167,7 @@ public class ProductionPlanDetailServiceLogic implements ProductionPlanDetailSer
       .spareQuantity(spareQuantity.add(spareQuantity.multiply(spareRatio)))
       .startDate(context.getStartDate(depth))
       .endDate(context.getEndDate(depth))
+      .unit(itemService.get(bom.getItemId()).getUnit())
       .build();
 
     val preparations = processPreparationService.getAll(process.getId()).stream()
@@ -191,6 +198,7 @@ public class ProductionPlanDetailServiceLogic implements ProductionPlanDetailSer
       .spareQuantity(BigDecimal.ZERO)
       .startDate(context.getStartDate(depth))
       .endDate(context.getEndDate(depth))
+      .unit(UnitKind.EA)
       .build();
     context.add(detail);
     return detail;
@@ -214,6 +222,7 @@ public class ProductionPlanDetailServiceLogic implements ProductionPlanDetailSer
           .spareQuantity(plan.getSpareQuantity())
           .startDate(startDate)
           .endDate(endDate)
+          .unit(plan.getUnit())
           .build()
       );
     } else {
@@ -261,6 +270,7 @@ public class ProductionPlanDetailServiceLogic implements ProductionPlanDetailSer
         .processId(null)
         .processPreparationId(null)
         .quantity(context.getQuantity(bom))
+        .unit(itemService.get(bom.getItemId()).getUnit())
         .spareQuantity(context.getSpareQuantity(bom))
         .startDate(context.getStartDate(depth))
         .endDate(context.getEndDate(depth))

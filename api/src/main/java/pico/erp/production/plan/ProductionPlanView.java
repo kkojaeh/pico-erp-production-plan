@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import pico.erp.item.ItemId;
 import pico.erp.project.ProjectId;
 import pico.erp.shared.data.Auditor;
+import pico.erp.shared.data.UnitKind;
 
 @Data
 public class ProductionPlanView {
@@ -41,6 +42,8 @@ public class ProductionPlanView {
   Auditor createdBy;
 
   OffsetDateTime createdDate;
+
+  UnitKind unit;
 
   @Data
   @NoArgsConstructor

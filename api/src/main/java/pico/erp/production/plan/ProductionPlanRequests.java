@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 import pico.erp.item.ItemId;
 import pico.erp.project.ProjectId;
 import pico.erp.shared.data.UnitKind;
+import pico.erp.user.UserId;
 
 public interface ProductionPlanRequests {
 
@@ -49,6 +50,10 @@ public interface ProductionPlanRequests {
 
     @NotNull
     UnitKind unit;
+
+    @Valid
+    @NotNull
+    UserId plannerId;
 
   }
 

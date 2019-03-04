@@ -32,6 +32,7 @@ import pico.erp.project.ProjectId;
 import pico.erp.shared.TypeDefinitions;
 import pico.erp.shared.data.Auditor;
 import pico.erp.shared.data.UnitKind;
+import pico.erp.user.UserId;
 
 @Entity(name = "ProductionPlan")
 @Table(name = "PRP_PRODUCTION_PLAN")
@@ -81,6 +82,11 @@ public class ProductionPlanEntity implements Serializable {
   @Column(length = TypeDefinitions.ENUM_LENGTH)
   @Enumerated(EnumType.STRING)
   UnitKind unit;
+
+  @AttributeOverrides({
+    @AttributeOverride(name = "value", column = @Column(name = "PLANNER_ID", length = TypeDefinitions.ID_LENGTH))
+  })
+  UserId plannerId;
 
   OffsetDateTime dueDate;
 

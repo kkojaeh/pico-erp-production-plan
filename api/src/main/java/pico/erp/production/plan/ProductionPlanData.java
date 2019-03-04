@@ -6,6 +6,7 @@ import lombok.Data;
 import pico.erp.item.ItemId;
 import pico.erp.project.ProjectId;
 import pico.erp.shared.data.UnitKind;
+import pico.erp.user.UserId;
 
 @Data
 public class ProductionPlanData {
@@ -39,6 +40,8 @@ public class ProductionPlanData {
   BigDecimal progressRate;
 
   UnitKind unit;
+
+  UserId plannerId;
 
   boolean updatable;
 

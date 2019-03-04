@@ -14,6 +14,7 @@ import pico.erp.item.ItemId;
 import pico.erp.project.ProjectId;
 import pico.erp.shared.data.UnitKind;
 import pico.erp.shared.event.Event;
+import pico.erp.user.UserId;
 
 public interface ProductionPlanMessages {
 
@@ -52,6 +53,10 @@ public interface ProductionPlanMessages {
       @Valid
       @NotNull
       UnitKind unit;
+
+      @Valid
+      @NotNull
+      UserId plannerId;
 
     }
 

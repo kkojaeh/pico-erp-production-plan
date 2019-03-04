@@ -16,6 +16,7 @@ import pico.erp.item.ItemId;
 import pico.erp.production.plan.ProductionPlanExceptions.CannotUpdateException;
 import pico.erp.project.ProjectId;
 import pico.erp.shared.data.UnitKind;
+import pico.erp.user.UserId;
 
 /**
  * 주문 접수
@@ -59,6 +60,8 @@ public class ProductionPlan implements Serializable {
 
   UnitKind unit;
 
+  UserId plannerId;
+
   public ProductionPlan() {
 
   }
@@ -75,6 +78,7 @@ public class ProductionPlan implements Serializable {
     this.progressRate = BigDecimal.ZERO;
     this.completedQuantity = BigDecimal.ZERO;
     this.unit = request.getUnit();
+    this.plannerId = request.getPlannerId();
     this.code = request.getCodeGenerator().generate(this);
     return new ProductionPlanMessages.Create.Response(
       Arrays.asList(new ProductionPlanEvents.CreatedEvent(this.id))

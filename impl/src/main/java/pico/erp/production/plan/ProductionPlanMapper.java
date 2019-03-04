@@ -82,6 +82,7 @@ public abstract class ProductionPlanMapper {
       .progressRate(entity.getProgressRate())
       .projectId(entity.getProjectId())
       .unit(entity.getUnit())
+      .plannerId(entity.getPlannerId())
       .build();
   }
 

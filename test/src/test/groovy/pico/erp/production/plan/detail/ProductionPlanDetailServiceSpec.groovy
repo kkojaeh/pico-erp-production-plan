@@ -18,6 +18,7 @@ import pico.erp.production.plan.ProductionPlanService
 import pico.erp.project.ProjectId
 import pico.erp.shared.IntegrationConfiguration
 import pico.erp.shared.data.UnitKind
+import pico.erp.user.UserId
 import spock.lang.Specification
 
 import java.time.OffsetDateTime
@@ -56,6 +57,8 @@ class ProductionPlanDetailServiceSpec extends Specification {
 
   def unit = UnitKind.EA
 
+  def plannerId = UserId.from("kjh")
+
   @Lazy
   @Autowired
   BomService bomService
@@ -70,7 +73,8 @@ class ProductionPlanDetailServiceSpec extends Specification {
         spareQuantity: 10,
         projectId: projectId,
         dueDate: OffsetDateTime.now().plusDays(7),
-        unit: unit
+        unit: unit,
+        plannerId: plannerId
       )
     )
     planService.create(
@@ -81,7 +85,8 @@ class ProductionPlanDetailServiceSpec extends Specification {
         spareQuantity: 10,
         projectId: projectId,
         dueDate: OffsetDateTime.now().plusDays(7),
-        unit: unit
+        unit: unit,
+        plannerId: plannerId
       )
     )
     planDetailService.create(

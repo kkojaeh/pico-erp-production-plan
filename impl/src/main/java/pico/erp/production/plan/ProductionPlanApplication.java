@@ -9,7 +9,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.annotation.Bean;
 import pico.erp.audit.AuditApi;
-import pico.erp.audit.AuditConfiguration;
 import pico.erp.bom.BomApi;
 import pico.erp.company.CompanyApi;
 import pico.erp.item.ItemApi;
@@ -47,15 +46,6 @@ public class ProductionPlanApplication implements ApplicationStarter {
 
   public static void main(String[] args) {
     application().run(args);
-  }
-
-  @Bean
-  @Public
-  public AuditConfiguration auditConfiguration() {
-    return AuditConfiguration.builder()
-      .packageToScan("pico.erp.production.plan")
-      .entity(Roles.class)
-      .build();
   }
 
   @Override

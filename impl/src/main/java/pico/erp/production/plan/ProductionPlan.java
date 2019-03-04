@@ -12,10 +12,9 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import pico.erp.audit.annotation.Audit;
-import pico.erp.item.ItemData;
+import pico.erp.item.ItemId;
 import pico.erp.production.plan.ProductionPlanExceptions.CannotUpdateException;
-import pico.erp.project.ProjectData;
+import pico.erp.project.ProjectId;
 
 /**
  * 주문 접수
@@ -26,7 +25,6 @@ import pico.erp.project.ProjectData;
 @EqualsAndHashCode(of = "id")
 @Builder(toBuilder = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Audit(alias = "production-plan")
 public class ProductionPlan implements Serializable {
 
   private static final long serialVersionUID = 1L;
@@ -36,7 +34,7 @@ public class ProductionPlan implements Serializable {
 
   ProductionPlanCode code;
 
-  ItemData item;
+  ItemId itemId;
 
   BigDecimal quantity;
 
@@ -56,7 +54,7 @@ public class ProductionPlan implements Serializable {
 
   ProductionPlanStatusKind status;
 
-  ProjectData project;
+  ProjectId projectId;
 
   public ProductionPlan() {
 
@@ -65,8 +63,8 @@ public class ProductionPlan implements Serializable {
   public ProductionPlanMessages.Create.Response apply(
     ProductionPlanMessages.Create.Request request) {
     this.id = request.getId();
-    this.item = request.getItem();
-    this.project = request.getProject();
+    this.itemId = request.getItemId();
+    this.projectId = request.getProjectId();
     this.quantity = request.getQuantity();
     this.spareQuantity = request.getSpareQuantity();
     this.dueDate = request.getDueDate();

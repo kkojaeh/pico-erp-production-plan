@@ -59,8 +59,6 @@ public abstract class ProductionPlanMapper {
   private ProjectService projectService;
 
   @Mappings({
-    @Mapping(target = "itemId", source = "item.id"),
-    @Mapping(target = "projectId", source = "project.id"),
     @Mapping(target = "createdBy", ignore = true),
     @Mapping(target = "createdDate", ignore = true),
     @Mapping(target = "lastModifiedBy", ignore = true),
@@ -72,7 +70,7 @@ public abstract class ProductionPlanMapper {
     return ProductionPlan.builder()
       .id(entity.getId())
       .code(entity.getCode())
-      .item(map(entity.getItemId()))
+      .itemId(entity.getItemId())
       .quantity(entity.getQuantity())
       .spareQuantity(entity.getSpareQuantity())
       .completedQuantity(entity.getCompletedQuantity())
@@ -82,7 +80,7 @@ public abstract class ProductionPlanMapper {
       .canceledDate(entity.getCanceledDate())
       .status(entity.getStatus())
       .progressRate(entity.getProgressRate())
-      .project(map(entity.getProjectId()))
+      .projectId(entity.getProjectId())
       .build();
   }
 
@@ -125,14 +123,10 @@ public abstract class ProductionPlanMapper {
   }
 
   @Mappings({
-    @Mapping(target = "itemId", source = "item.id"),
-    @Mapping(target = "projectId", source = "project.id")
   })
   public abstract ProductionPlanData map(ProductionPlan productionPlan);
 
   @Mappings({
-    @Mapping(target = "item", source = "itemId"),
-    @Mapping(target = "project", source = "projectId"),
     @Mapping(target = "codeGenerator", expression = "java(productionPlanCodeGenerator)")
   })
   public abstract ProductionPlanMessages.Create.Request map(

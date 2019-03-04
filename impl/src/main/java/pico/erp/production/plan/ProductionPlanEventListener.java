@@ -33,7 +33,7 @@ public class ProductionPlanEventListener {
   @JmsListener(destination = LISTENER_NAME + "."
     + ProductionPlanDetailEvents.DeterminedEvent.CHANNEL)
   public void onPlanDetailDetermined(ProductionPlanDetailEvents.DeterminedEvent event) {
-    val detail = planDetailService.get(event.getProductionPlanDetailId());
+    val detail = planDetailService.get(event.getId());
     val planId = detail.getPlanId();
     val determined = planDetailService.getAll(planId).stream()
       .allMatch(d -> d.getStatus() == ProductionPlanDetailStatusKind.DETERMINED);

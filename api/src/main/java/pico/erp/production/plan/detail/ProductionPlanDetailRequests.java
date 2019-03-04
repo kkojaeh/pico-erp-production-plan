@@ -2,6 +2,8 @@ package pico.erp.production.plan.detail;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 import javax.validation.Valid;
 import javax.validation.constraints.Future;
 import javax.validation.constraints.Min;
@@ -66,6 +68,22 @@ public interface ProductionPlanDetailRequests {
     @NotNull
     OffsetDateTime endDate;
 
+    public static CreateRequest from(ProductionPlanDetailData data) {
+      return CreateRequest.builder()
+        .id(data.getId())
+        .planId(data.getPlanId())
+        .itemId(data.getItemId())
+        .itemSpecCode(data.getItemSpecCode())
+        .itemSpecId(data.getItemSpecId())
+        .processId(data.getProcessId())
+        .processPreparationId(data.getProcessPreparationId())
+        .quantity(data.getQuantity())
+        .spareQuantity(data.getSpareQuantity())
+        .startDate(data.getStartDate())
+        .endDate(data.getEndDate())
+        .build();
+    }
+
   }
 
   @Data
@@ -94,7 +112,9 @@ public interface ProductionPlanDetailRequests {
     @NotNull
     OffsetDateTime endDate;
 
-    CompanyId progressCompanyId;
+    CompanyId actorId;
+
+    CompanyId receiverId;
 
     ProductionPlanDetailProgressTypeKind progressType;
 
@@ -218,6 +238,15 @@ public interface ProductionPlanDetailRequests {
     @Valid
     @NotNull
     ProductionPlanDetailId dependencyId;
+
+    public static List<AddDependencyRequest> from(ProductionPlanDetailData data) {
+      return data.getDependencies().stream()
+        .map(dependencyId -> ProductionPlanDetailRequests.AddDependencyRequest.builder()
+          .id(data.getId())
+          .dependencyId(dependencyId)
+          .build()
+        ).collect(Collectors.toList());
+    }
 
   }
 

@@ -84,11 +84,6 @@ public abstract class ProductionPlanDetailMapper {
 
   @Mappings({
     @Mapping(target = "planId", source = "plan.id"),
-    @Mapping(target = "itemId", source = "item.id"),
-    @Mapping(target = "itemSpecId", source = "itemSpec.id"),
-    @Mapping(target = "processId", source = "process.id"),
-    @Mapping(target = "processPreparationId", source = "processPreparation.id"),
-    @Mapping(target = "progressCompanyId", source = "progressCompany.id"),
     @Mapping(target = "createdBy", ignore = true),
     @Mapping(target = "createdDate", ignore = true),
     @Mapping(target = "lastModifiedBy", ignore = true),
@@ -100,16 +95,17 @@ public abstract class ProductionPlanDetailMapper {
     return ProductionPlanDetail.builder()
       .id(entity.getId())
       .plan(map(entity.getPlanId()))
-      .item(map(entity.getItemId()))
-      .process(map(entity.getProcessId()))
-      .processPreparation(map(entity.getProcessPreparationId()))
-      .itemSpec(map(entity.getItemSpecId()))
+      .itemId(entity.getItemId())
+      .processId(entity.getProcessId())
+      .processPreparationId(entity.getProcessPreparationId())
+      .itemSpecId(entity.getItemSpecId())
       .quantity(entity.getQuantity())
       .spareQuantity(entity.getSpareQuantity())
       .progressedQuantity(entity.getProgressedQuantity())
       .startDate(entity.getStartDate())
       .endDate(entity.getEndDate())
-      .progressCompany(map(entity.getProgressCompanyId()))
+      .actorId(entity.getActorId())
+      .receiverId(entity.getReceiverId())
       .status(entity.getStatus())
       .completedDate(entity.getCompletedDate())
       .canceledDate(entity.getCanceledDate())
@@ -177,28 +173,16 @@ public abstract class ProductionPlanDetailMapper {
   }
 
   @Mappings({
-    @Mapping(target = "planId", source = "plan.id"),
-    @Mapping(target = "itemId", source = "item.id"),
-    @Mapping(target = "itemSpecId", source = "itemSpec.id"),
-    @Mapping(target = "processId", source = "process.id"),
-    @Mapping(target = "processPreparationId", source = "processPreparation.id"),
-    @Mapping(target = "progressCompanyId", source = "progressCompany.id")
+    @Mapping(target = "planId", source = "plan.id")
   })
   public abstract ProductionPlanDetailData map(ProductionPlanDetail item);
 
   @Mappings({
-    @Mapping(target = "plan", source = "planId"),
-    @Mapping(target = "item", source = "itemId"),
-    @Mapping(target = "process", source = "processId"),
-    @Mapping(target = "processPreparation", source = "processPreparationId"),
-    @Mapping(target = "itemSpec", source = "itemSpecId")
+    @Mapping(target = "plan", source = "planId")
   })
   public abstract ProductionPlanDetailMessages.Create.Request map(
     ProductionPlanDetailRequests.CreateRequest request);
 
-  @Mappings({
-    @Mapping(target = "progressCompany", source = "progressCompanyId")
-  })
   public abstract ProductionPlanDetailMessages.Update.Request map(
     ProductionPlanDetailRequests.UpdateRequest request);
 

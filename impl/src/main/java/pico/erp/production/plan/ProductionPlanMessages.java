@@ -10,8 +10,8 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.Value;
-import pico.erp.item.ItemData;
-import pico.erp.project.ProjectData;
+import pico.erp.item.ItemId;
+import pico.erp.project.ProjectId;
 import pico.erp.shared.event.Event;
 
 public interface ProductionPlanMessages {
@@ -27,7 +27,7 @@ public interface ProductionPlanMessages {
 
       @Valid
       @NotNull
-      ItemData item;
+      ItemId itemId;
 
       @NotNull
       @Min(0)
@@ -39,7 +39,7 @@ public interface ProductionPlanMessages {
 
       @Valid
       @NotNull
-      ProjectData project;
+      ProjectId projectId;
 
       @Future
       @NotNull

@@ -98,9 +98,14 @@ public class ProductionPlanDetailEntity implements Serializable {
   OffsetDateTime endDate;
 
   @AttributeOverrides({
-    @AttributeOverride(name = "value", column = @Column(name = "PROGRESS_COMPANY_ID", length = TypeDefinitions.ID_LENGTH))
+    @AttributeOverride(name = "value", column = @Column(name = "ACTOR_ID", length = TypeDefinitions.ID_LENGTH))
   })
-  CompanyId progressCompanyId;
+  CompanyId actorId;
+
+  @AttributeOverrides({
+    @AttributeOverride(name = "value", column = @Column(name = "RECEIVER_ID", length = TypeDefinitions.ID_LENGTH))
+  })
+  CompanyId receiverId;
 
   OffsetDateTime completedDate;
 

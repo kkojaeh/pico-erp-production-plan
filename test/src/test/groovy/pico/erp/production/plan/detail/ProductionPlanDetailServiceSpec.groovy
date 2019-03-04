@@ -1,5 +1,6 @@
 package pico.erp.production.plan.detail
 
+
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.context.annotation.ComponentScan
@@ -44,7 +45,7 @@ class ProductionPlanDetailServiceSpec extends Specification {
 
   def itemId = ItemId.from("item-1")
 
-  def progressCompanyId = CompanyId.from("CUST1")
+  def actorId = CompanyId.from("CUST1")
 
   def projectId = ProjectId.from("sample-project1")
 
@@ -139,7 +140,7 @@ class ProductionPlanDetailServiceSpec extends Specification {
         spareQuantity: 10,
         startDate: planStartDate,
         endDate: planEndDate,
-        progressCompanyId: progressCompanyId,
+        actorId: actorId,
         progressType: ProductionPlanDetailProgressTypeKind.PRODUCE
       )
     )
@@ -153,7 +154,7 @@ class ProductionPlanDetailServiceSpec extends Specification {
         spareQuantity: 10,
         startDate: planEndDate.plusDays(1),
         endDate: planEndDate.plusDays(2),
-        progressCompanyId: progressCompanyId,
+        actorId: actorId,
         progressType: ProductionPlanDetailProgressTypeKind.PRODUCE
       )
     )
@@ -167,7 +168,7 @@ class ProductionPlanDetailServiceSpec extends Specification {
         spareQuantity: 10,
         startDate: planStartDate,
         endDate: planEndDate,
-        progressCompanyId: null,
+        actorId: null,
         progressType: ProductionPlanDetailProgressTypeKind.PRODUCE
       )
     )
@@ -320,7 +321,7 @@ class ProductionPlanDetailServiceSpec extends Specification {
 
     then:
     plan.plannedQuantity == 110
-    plan.progressCompanyId == progressCompanyId
+    plan.actorId == actorId
     plan.progressType == ProductionPlanDetailProgressTypeKind.PRODUCE
   }
 

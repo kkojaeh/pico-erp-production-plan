@@ -15,7 +15,7 @@ public interface ProductionPlanDetailEvents {
 
     public final static String CHANNEL = "event.production-plan-detail.created";
 
-    private ProductionPlanDetailId productionPlanDetailId;
+    private ProductionPlanDetailId id;
 
     public String channel() {
       return CHANNEL;
@@ -30,7 +30,7 @@ public interface ProductionPlanDetailEvents {
 
     public final static String CHANNEL = "event.production-plan-detail.progressed";
 
-    private ProductionPlanDetailId productionPlanDetailId;
+    private ProductionPlanDetailId id;
 
     public String channel() {
       return CHANNEL;
@@ -45,7 +45,7 @@ public interface ProductionPlanDetailEvents {
 
     public final static String CHANNEL = "event.production-plan-detail.determined";
 
-    private ProductionPlanDetailId productionPlanDetailId;
+    private ProductionPlanDetailId id;
 
     public String channel() {
       return CHANNEL;
@@ -60,7 +60,7 @@ public interface ProductionPlanDetailEvents {
 
     public final static String CHANNEL = "event.production-plan-detail.updated";
 
-    private ProductionPlanDetailId productionPlanDetailId;
+    private ProductionPlanDetailId id;
 
     public String channel() {
       return CHANNEL;
@@ -75,7 +75,7 @@ public interface ProductionPlanDetailEvents {
 
     public final static String CHANNEL = "event.production-plan-detail.split";
 
-    private ProductionPlanDetailId productionPlanDetailId;
+    private ProductionPlanDetailId id;
 
     public String channel() {
       return CHANNEL;
@@ -90,7 +90,7 @@ public interface ProductionPlanDetailEvents {
 
     public final static String CHANNEL = "event.production-plan-detail.canceled";
 
-    private ProductionPlanDetailId productionPlanDetailId;
+    private ProductionPlanDetailId id;
 
     public String channel() {
       return CHANNEL;
@@ -105,7 +105,7 @@ public interface ProductionPlanDetailEvents {
 
     public final static String CHANNEL = "event.production-plan-detail.completed";
 
-    private ProductionPlanDetailId productionPlanDetailId;
+    private ProductionPlanDetailId id;
 
     public String channel() {
       return CHANNEL;
@@ -120,7 +120,7 @@ public interface ProductionPlanDetailEvents {
 
     public final static String CHANNEL = "event.production-plan-detail.deleted";
 
-    private ProductionPlanDetailId productionPlanDetailId;
+    private ProductionPlanDetailId id;
 
     public String channel() {
       return CHANNEL;
@@ -139,7 +139,7 @@ public interface ProductionPlanDetailEvents {
 
     OffsetDateTime beforeEndDate;
 
-    private ProductionPlanDetailId productionPlanDetailId;
+    private ProductionPlanDetailId id;
 
     public String channel() {
       return CHANNEL;

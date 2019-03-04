@@ -17,7 +17,6 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
-import pico.erp.audit.AuditService;
 import pico.erp.bom.BomData;
 import pico.erp.bom.BomHierarchyData;
 import pico.erp.bom.BomId;
@@ -35,6 +34,7 @@ import pico.erp.production.plan.ProductionPlanService;
 import pico.erp.production.plan.detail.ProductionPlanDetailRequests.GenerateRequest;
 import pico.erp.production.plan.detail.ProductionPlanDetailRequests.RescheduleByDependencyRequest;
 import pico.erp.shared.Public;
+import pico.erp.shared.event.Event;
 import pico.erp.shared.event.EventPublisher;
 
 @SuppressWarnings("Duplicates")
@@ -52,10 +52,6 @@ public class ProductionPlanDetailServiceLogic implements ProductionPlanDetailSer
 
   @Autowired
   private ProductionPlanDetailMapper mapper;
-
-  @Lazy
-  @Autowired
-  private AuditService auditService;
 
   @Lazy
   @Autowired
@@ -85,7 +81,6 @@ public class ProductionPlanDetailServiceLogic implements ProductionPlanDetailSer
       .orElseThrow(ProductionPlanDetailExceptions.NotFoundException::new);
     val response = planDetail.apply(mapper.map(request));
     planDetailRepository.update(planDetail);
-    auditService.commit(planDetail);
     eventPublisher.publishEvents(response.getEvents());
   }
 
@@ -95,7 +90,6 @@ public class ProductionPlanDetailServiceLogic implements ProductionPlanDetailSer
       .orElseThrow(ProductionPlanDetailExceptions.NotFoundException::new);
     val response = planDetail.apply(mapper.map(request));
     planDetailRepository.update(planDetail);
-    auditService.commit(planDetail);
     eventPublisher.publishEvents(response.getEvents());
   }
 
@@ -105,7 +99,6 @@ public class ProductionPlanDetailServiceLogic implements ProductionPlanDetailSer
       .orElseThrow(ProductionPlanDetailExceptions.NotFoundException::new);
     val response = planDetail.apply(mapper.map(request));
     planDetailRepository.update(planDetail);
-    auditService.commit(planDetail);
     eventPublisher.publishEvents(response.getEvents());
   }
 
@@ -117,7 +110,6 @@ public class ProductionPlanDetailServiceLogic implements ProductionPlanDetailSer
       throw new ProductionPlanDetailExceptions.AlreadyExistsException();
     }
     val created = planDetailRepository.create(planDetail);
-    auditService.commit(created);
     eventPublisher.publishEvents(response.getEvents());
     return mapper.map(created);
   }
@@ -136,7 +128,6 @@ public class ProductionPlanDetailServiceLogic implements ProductionPlanDetailSer
       );
     });
     planDetailRepository.deleteBy(planDetail.getId());
-    auditService.commit(planDetail);
     eventPublisher.publishEvents(response.getEvents());
 
   }
@@ -246,10 +237,10 @@ public class ProductionPlanDetailServiceLogic implements ProductionPlanDetailSer
       results.addAll(context.getGenerated());
     }
     results.stream()
-      .map(ProductionPlanDetailData::toCreateRequest)
+      .map(data -> ProductionPlanDetailRequests.CreateRequest.from(data))
       .forEach(this::create);
     results.stream()
-      .flatMap(data -> data.toAddDependencyRequests().stream())
+      .flatMap(data -> ProductionPlanDetailRequests.AddDependencyRequest.from(data).stream())
       .forEach(this::addDependency);
   }
 
@@ -319,7 +310,6 @@ public class ProductionPlanDetailServiceLogic implements ProductionPlanDetailSer
       .orElseThrow(ProductionPlanDetailExceptions.NotFoundException::new);
     val response = planDetail.apply(mapper.map(request));
     planDetailRepository.update(planDetail);
-    auditService.commit(planDetail);
     eventPublisher.publishEvents(response.getEvents());
   }
 
@@ -329,7 +319,6 @@ public class ProductionPlanDetailServiceLogic implements ProductionPlanDetailSer
       .orElseThrow(ProductionPlanDetailExceptions.NotFoundException::new);
     val response = planDetail.apply(mapper.map(request));
     planDetailRepository.update(planDetail);
-    auditService.commit(planDetail);
     eventPublisher.publishEvents(response.getEvents());
   }
 
@@ -339,7 +328,6 @@ public class ProductionPlanDetailServiceLogic implements ProductionPlanDetailSer
       .orElseThrow(ProductionPlanDetailExceptions.NotFoundException::new);
     val response = planDetail.apply(mapper.map(request));
     planDetailRepository.update(planDetail);
-    auditService.commit(planDetail);
     eventPublisher.publishEvents(response.getEvents());
   }
 
@@ -348,7 +336,6 @@ public class ProductionPlanDetailServiceLogic implements ProductionPlanDetailSer
     planDetailRepository.findAllDependedOn(request.getDependencyId()).forEach(detail -> {
       val response = detail.apply(message);
       planDetailRepository.update(detail);
-      auditService.commit(detail);
       eventPublisher.publishEvents(response.getEvents());
     });
   }
@@ -359,7 +346,6 @@ public class ProductionPlanDetailServiceLogic implements ProductionPlanDetailSer
       .orElseThrow(ProductionPlanDetailExceptions.NotFoundException::new);
     val response = planDetail.apply(mapper.map(request));
     planDetailRepository.update(planDetail);
-    auditService.commit(planDetail);
     eventPublisher.publishEvents(response.getEvents());
   }
 
@@ -369,7 +355,6 @@ public class ProductionPlanDetailServiceLogic implements ProductionPlanDetailSer
       .orElseThrow(ProductionPlanDetailExceptions.NotFoundException::new);
     val response = planDetail.apply(mapper.map(request));
     planDetailRepository.update(planDetail);
-    auditService.commit(planDetail);
     val split = planDetailRepository.create(response.getSplit());
     eventPublisher.publishEvents(response.getEvents());
     return mapper.map(split);
@@ -379,10 +364,20 @@ public class ProductionPlanDetailServiceLogic implements ProductionPlanDetailSer
   public void update(ProductionPlanDetailRequests.UpdateRequest request) {
     val planDetail = planDetailRepository.findBy(request.getId())
       .orElseThrow(ProductionPlanDetailExceptions.NotFoundException::new);
+    val events = new LinkedList<Event>();
     val response = planDetail.apply(mapper.map(request));
     planDetailRepository.update(planDetail);
-    auditService.commit(planDetail);
-    eventPublisher.publishEvents(response.getEvents());
+    events.addAll(response.getEvents());
+    planDetail.getDependencies().forEach(dependency -> {
+      val dependedOns = planDetailRepository.findAllDependedOn(dependency.getId())
+        .collect(Collectors.toList());
+      val dependencyResponse = dependency.apply(
+        new ProductionPlanDetailMessages.RevalidateByDependedOns.Request(dependedOns)
+      );
+      planDetailRepository.update(dependency);
+      events.addAll(dependencyResponse.getEvents());
+    });
+    eventPublisher.publishEvents(events);
   }
 
   @Getter

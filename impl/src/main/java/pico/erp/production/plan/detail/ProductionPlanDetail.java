@@ -5,11 +5,13 @@ import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Set;
+import java.util.stream.Collectors;
 import javax.persistence.Id;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -19,13 +21,12 @@ import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import lombok.val;
-import pico.erp.audit.annotation.Audit;
-import pico.erp.company.CompanyData;
-import pico.erp.item.ItemData;
+import pico.erp.company.CompanyId;
+import pico.erp.item.ItemId;
 import pico.erp.item.spec.ItemSpecCode;
-import pico.erp.item.spec.ItemSpecData;
-import pico.erp.process.ProcessData;
-import pico.erp.process.preparation.ProcessPreparationData;
+import pico.erp.item.spec.ItemSpecId;
+import pico.erp.process.ProcessId;
+import pico.erp.process.preparation.ProcessPreparationId;
 import pico.erp.production.plan.ProductionPlan;
 import pico.erp.shared.event.Event;
 
@@ -38,7 +39,6 @@ import pico.erp.shared.event.Event;
 @EqualsAndHashCode(of = "id")
 @Builder(toBuilder = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Audit(alias = "production-plan-detail")
 public class ProductionPlanDetail implements Serializable {
 
   private static final long serialVersionUID = 1L;
@@ -50,15 +50,15 @@ public class ProductionPlanDetail implements Serializable {
 
   ProductionPlan plan;
 
-  ItemData item;
+  ItemId itemId;
 
   ItemSpecCode itemSpecCode;
 
-  ProcessData process;
+  ProcessId processId;
 
-  ProcessPreparationData processPreparation;
+  ProcessPreparationId processPreparationId;
 
-  ItemSpecData itemSpec;
+  ItemSpecId itemSpecId;
 
   BigDecimal quantity;
 
@@ -70,7 +70,9 @@ public class ProductionPlanDetail implements Serializable {
 
   OffsetDateTime endDate;
 
-  CompanyData progressCompany;
+  CompanyId actorId;
+
+  CompanyId receiverId;
 
   OffsetDateTime completedDate;
 
@@ -97,11 +99,11 @@ public class ProductionPlanDetail implements Serializable {
     this.id = request.getId();
     this.groupId = ProductionPlanDetailGroupId.generate();
     this.plan = request.getPlan();
-    this.item = request.getItem();
+    this.itemId = request.getItemId();
     this.itemSpecCode = request.getItemSpecCode();
-    this.process = request.getProcess();
-    this.processPreparation = request.getProcessPreparation();
-    this.itemSpec = request.getItemSpec();
+    this.processId = request.getProcessId();
+    this.processPreparationId = request.getProcessPreparationId();
+    this.itemSpecId = request.getItemSpecId();
     this.quantity = request.getQuantity();
     this.spareQuantity = request.getSpareQuantity();
     this.progressedQuantity = BigDecimal.ZERO;
@@ -132,11 +134,11 @@ public class ProductionPlanDetail implements Serializable {
     split.id = ProductionPlanDetailId.generate();
     split.groupId = this.groupId;
     split.plan = this.plan;
-    split.item = this.item;
+    split.itemId = this.itemId;
     split.itemSpecCode = this.itemSpecCode;
-    split.process = this.process;
-    split.processPreparation = this.processPreparation;
-    split.itemSpec = this.itemSpec;
+    split.processId = this.processId;
+    split.processPreparationId = this.processPreparationId;
+    split.itemSpecId = this.itemSpecId;
     split.quantity = request.getQuantity();
     split.spareQuantity = request.getSpareQuantity();
     split.progressedQuantity = BigDecimal.ZERO;
@@ -161,7 +163,8 @@ public class ProductionPlanDetail implements Serializable {
     this.spareQuantity = request.getSpareQuantity();
     this.startDate = request.getStartDate();
     this.endDate = request.getEndDate();
-    this.progressCompany = request.getProgressCompany();
+    this.actorId = request.getActorId();
+    this.receiverId = request.getReceiverId();
     this.progressType = request.getProgressType();
     return new ProductionPlanDetailMessages.Update.Response(
       Arrays.asList(new ProductionPlanDetailEvents.UpdatedEvent(this.id))
@@ -311,6 +314,27 @@ public class ProductionPlanDetail implements Serializable {
     );
   }
 
+  public ProductionPlanDetailMessages.RevalidateByDependedOns.Response apply(
+    ProductionPlanDetailMessages.RevalidateByDependedOns.Request request) {
+    if (!isUpdatable()) {
+      throw new ProductionPlanDetailExceptions.CannotUpdateException();
+    }
+    val dependedActorIds = request.getDependedOns().stream()
+      .map(ProductionPlanDetail::getActorId)
+      .filter(id -> id != null)
+      .collect(Collectors.toSet());
+    val size = dependedActorIds.size();
+    if (size == 1) {
+      receiverId = dependedActorIds.stream().findFirst().get();
+    } else if (size > 1) {
+      receiverId = null;
+    }
+    return new ProductionPlanDetailMessages.RevalidateByDependedOns.Response(
+      Collections.emptyList()
+    );
+
+  }
+
   public BigDecimal getPlannedQuantity() {
     return quantity.add(spareQuantity);
   }
@@ -354,7 +378,12 @@ public class ProductionPlanDetail implements Serializable {
   }
 
   public boolean isDeterminable() {
-    return status.isDeterminable() && this.progressCompany != null && this.progressType != null;
+    if (plan.getItemId().equals(itemId)) {
+      return status.isDeterminable() && this.actorId != null && this.progressType != null;
+    } else {
+      return status.isDeterminable() && this.actorId != null && this.progressType != null
+        && this.receiverId != null;
+    }
   }
 
   public boolean isProgressable() {

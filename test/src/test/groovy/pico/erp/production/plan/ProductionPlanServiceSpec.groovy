@@ -34,7 +34,7 @@ class ProductionPlanServiceSpec extends Specification {
 
   def projectId = ProjectId.from("sample-project1")
 
-  def progressCompanyId = CompanyId.from("CUST1")
+  def actorId = CompanyId.from("CUST1")
 
   def planDueDate = OffsetDateTime.now().plusDays(2)
 

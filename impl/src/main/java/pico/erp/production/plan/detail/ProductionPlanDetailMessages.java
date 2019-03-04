@@ -3,6 +3,7 @@ package pico.erp.production.plan.detail;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.Collection;
+import java.util.List;
 import javax.validation.Valid;
 import javax.validation.constraints.Future;
 import javax.validation.constraints.Min;
@@ -13,12 +14,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.Value;
 import org.hibernate.validator.constraints.ScriptAssert;
-import pico.erp.company.CompanyData;
-import pico.erp.item.ItemData;
+import pico.erp.company.CompanyId;
+import pico.erp.item.ItemId;
 import pico.erp.item.spec.ItemSpecCode;
-import pico.erp.item.spec.ItemSpecData;
-import pico.erp.process.ProcessData;
-import pico.erp.process.preparation.ProcessPreparationData;
+import pico.erp.item.spec.ItemSpecId;
+import pico.erp.process.ProcessId;
+import pico.erp.process.preparation.ProcessPreparationId;
 import pico.erp.production.plan.ProductionPlan;
 import pico.erp.shared.event.Event;
 
@@ -45,17 +46,18 @@ public interface ProductionPlanDetailMessages {
 
       @Valid
       @NotNull
-      ItemData item;
+      ItemId itemId;
 
       @Valid
       @NotNull
       ItemSpecCode itemSpecCode;
 
-      ProcessData process;
+      ProcessId processId;
 
-      ProcessPreparationData processPreparation;
+      ProcessPreparationId processPreparationId;
 
-      ItemSpecData itemSpec;
+      @Valid
+      ItemSpecId itemSpecId;
 
       @NotNull
       @Min(0)
@@ -107,7 +109,9 @@ public interface ProductionPlanDetailMessages {
       @NotNull
       OffsetDateTime endDate;
 
-      CompanyData progressCompany;
+      CompanyId actorId;
+
+      CompanyId receiverId;
 
       ProductionPlanDetailProgressTypeKind progressType;
 
@@ -309,6 +313,27 @@ public interface ProductionPlanDetailMessages {
     class Request {
 
       ProductionPlanDetail dependency;
+
+    }
+
+    @Value
+    class Response {
+
+      Collection<Event> events;
+
+    }
+
+  }
+
+  interface RevalidateByDependedOns {
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    class Request {
+
+      @NotNull
+      List<ProductionPlanDetail> dependedOns;
 
     }
 

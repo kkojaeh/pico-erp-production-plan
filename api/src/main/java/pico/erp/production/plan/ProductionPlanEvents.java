@@ -14,7 +14,7 @@ public interface ProductionPlanEvents {
 
     public final static String CHANNEL = "event.production-plan.created";
 
-    private ProductionPlanId productionPlanId;
+    private ProductionPlanId id;
 
     public String channel() {
       return CHANNEL;
@@ -29,7 +29,7 @@ public interface ProductionPlanEvents {
 
     public final static String CHANNEL = "event.production-plan.progressed";
 
-    private ProductionPlanId productionPlanId;
+    private ProductionPlanId id;
 
     public String channel() {
       return CHANNEL;
@@ -44,7 +44,7 @@ public interface ProductionPlanEvents {
 
     public final static String CHANNEL = "event.production-plan.prepared";
 
-    private ProductionPlanId productionPlanId;
+    private ProductionPlanId id;
 
     public String channel() {
       return CHANNEL;
@@ -59,7 +59,7 @@ public interface ProductionPlanEvents {
 
     public final static String CHANNEL = "event.production-plan.determined";
 
-    private ProductionPlanId productionPlanId;
+    private ProductionPlanId id;
 
     public String channel() {
       return CHANNEL;
@@ -74,7 +74,7 @@ public interface ProductionPlanEvents {
 
     public final static String CHANNEL = "event.production-plan.updated";
 
-    private ProductionPlanId productionPlanId;
+    private ProductionPlanId id;
 
     public String channel() {
       return CHANNEL;
@@ -89,7 +89,7 @@ public interface ProductionPlanEvents {
 
     public final static String CHANNEL = "event.production-plan.canceled";
 
-    private ProductionPlanId productionPlanId;
+    private ProductionPlanId id;
 
     public String channel() {
       return CHANNEL;
@@ -104,7 +104,7 @@ public interface ProductionPlanEvents {
 
     public final static String CHANNEL = "event.production-plan.completed";
 
-    private ProductionPlanId productionPlanId;
+    private ProductionPlanId id;
 
     public String channel() {
       return CHANNEL;

@@ -3,7 +3,6 @@ package pico.erp.production.plan.detail;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -50,7 +49,9 @@ public class ProductionPlanDetailData {
 
   OffsetDateTime endDate;
 
-  CompanyId progressCompanyId;
+  CompanyId actorId;
+
+  CompanyId receiverId;
 
   OffsetDateTime completedDate;
 
@@ -81,31 +82,5 @@ public class ProductionPlanDetailData {
   public boolean updatable;
 
   public boolean deletable;
-
-
-  List<ProductionPlanDetailRequests.AddDependencyRequest> toAddDependencyRequests() {
-    return dependencies.stream()
-      .map(dependencyId -> ProductionPlanDetailRequests.AddDependencyRequest.builder()
-        .id(id)
-        .dependencyId(dependencyId)
-        .build()
-      ).collect(Collectors.toList());
-  }
-
-  ProductionPlanDetailRequests.CreateRequest toCreateRequest() {
-    return ProductionPlanDetailRequests.CreateRequest.builder()
-      .id(id)
-      .planId(planId)
-      .itemId(itemId)
-      .itemSpecCode(itemSpecCode)
-      .itemSpecId(itemSpecId)
-      .processId(processId)
-      .processPreparationId(processPreparationId)
-      .quantity(quantity)
-      .spareQuantity(spareQuantity)
-      .startDate(startDate)
-      .endDate(endDate)
-      .build();
-  }
 
 }

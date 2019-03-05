@@ -385,12 +385,8 @@ public class ProductionPlanDetail implements Serializable {
   }
 
   public boolean isDeterminable() {
-    if (plan.getItemId().equals(itemId)) {
-      return status.isDeterminable() && this.actorId != null && this.progressType != null;
-    } else {
-      return status.isDeterminable() && this.actorId != null && this.progressType != null
-        && this.receiverId != null;
-    }
+    return status.isDeterminable() && this.actorId != null && this.progressType != null
+      && this.receiverId != null;
   }
 
   public boolean isProgressable() {

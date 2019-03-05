@@ -59,6 +59,8 @@ class ProductionPlanDetailServiceSpec extends Specification {
 
   def plannerId = UserId.from("kjh")
 
+  def receiverId = CompanyId.from("CUST2")
+
   @Lazy
   @Autowired
   BomService bomService
@@ -74,7 +76,8 @@ class ProductionPlanDetailServiceSpec extends Specification {
         projectId: projectId,
         dueDate: OffsetDateTime.now().plusDays(7),
         unit: unit,
-        plannerId: plannerId
+        plannerId: plannerId,
+        receiverId: receiverId
       )
     )
     planService.create(
@@ -86,7 +89,8 @@ class ProductionPlanDetailServiceSpec extends Specification {
         projectId: projectId,
         dueDate: OffsetDateTime.now().plusDays(7),
         unit: unit,
-        plannerId: plannerId
+        plannerId: plannerId,
+        receiverId: receiverId
       )
     )
     planDetailService.create(

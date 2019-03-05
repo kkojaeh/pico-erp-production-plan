@@ -116,6 +116,7 @@ public class ProductionPlanDetail implements Serializable {
     this.dependencies = new HashSet<>();
     this.order = 0;
     this.split = false;
+    this.receiverId = request.getReceiverId();
     this.unit = request.getUnit();
     return new ProductionPlanDetailMessages.Create.Response(
       Arrays.asList(new ProductionPlanDetailEvents.CreatedEvent(this.id))
@@ -151,6 +152,7 @@ public class ProductionPlanDetail implements Serializable {
     split.status = ProductionPlanDetailStatusKind.CREATED;
     split.dependencies = new HashSet<>(this.dependencies);
     split.split = true;
+    split.receiverId = this.receiverId;
     split.unit = this.unit;
 
     return new ProductionPlanDetailMessages.Split.Response(

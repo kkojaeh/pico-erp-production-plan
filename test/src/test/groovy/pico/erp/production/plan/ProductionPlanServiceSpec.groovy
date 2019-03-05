@@ -44,6 +44,8 @@ class ProductionPlanServiceSpec extends Specification {
 
   def planDueDate = OffsetDateTime.now().plusDays(2)
 
+  def receiverId = CompanyId.from("CUST2")
+
 
   def setup() {
     planService.create(
@@ -55,7 +57,8 @@ class ProductionPlanServiceSpec extends Specification {
         projectId: projectId,
         dueDate: planDueDate,
         unit: unit,
-        plannerId: plannerId
+        plannerId: plannerId,
+        receiverId: receiverId
       )
     )
   }

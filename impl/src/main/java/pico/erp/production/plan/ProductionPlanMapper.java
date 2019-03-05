@@ -83,6 +83,7 @@ public abstract class ProductionPlanMapper {
       .projectId(entity.getProjectId())
       .unit(entity.getUnit())
       .plannerId(entity.getPlannerId())
+      .receiverId(entity.getReceiverId())
       .build();
   }
 

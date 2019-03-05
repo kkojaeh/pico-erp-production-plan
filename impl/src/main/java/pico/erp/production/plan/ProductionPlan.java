@@ -12,6 +12,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
+import pico.erp.company.CompanyId;
 import pico.erp.item.ItemId;
 import pico.erp.production.plan.ProductionPlanExceptions.CannotUpdateException;
 import pico.erp.project.ProjectId;
@@ -62,6 +63,8 @@ public class ProductionPlan implements Serializable {
 
   UserId plannerId;
 
+  CompanyId receiverId;
+
   public ProductionPlan() {
 
   }
@@ -79,6 +82,7 @@ public class ProductionPlan implements Serializable {
     this.completedQuantity = BigDecimal.ZERO;
     this.unit = request.getUnit();
     this.plannerId = request.getPlannerId();
+    this.receiverId = request.getReceiverId();
     this.code = request.getCodeGenerator().generate(this);
     return new ProductionPlanMessages.Create.Response(
       Arrays.asList(new ProductionPlanEvents.CreatedEvent(this.id))

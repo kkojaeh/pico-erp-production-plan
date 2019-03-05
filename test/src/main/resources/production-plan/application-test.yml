@@ -8,6 +8,7 @@ data:
     project-id: sample-project1
     unit: EA
     planner-id: kjh
+    receiver-id: CUST2
   - id: production-plan-2
     item-id: toothbrush-05
     quantity: 1000
@@ -16,3 +17,4 @@ data:
     project-id: sample-project1
     unit: EA
     planner-id: kjh
+    receiver-id: CUST2

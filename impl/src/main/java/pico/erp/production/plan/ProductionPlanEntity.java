@@ -27,6 +27,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import pico.erp.company.CompanyId;
 import pico.erp.item.ItemId;
 import pico.erp.project.ProjectId;
 import pico.erp.shared.TypeDefinitions;
@@ -125,5 +126,10 @@ public class ProductionPlanEntity implements Serializable {
 
   @LastModifiedDate
   OffsetDateTime lastModifiedDate;
+
+  @AttributeOverrides({
+    @AttributeOverride(name = "value", column = @Column(name = "RECEIVER_ID", length = TypeDefinitions.ID_LENGTH))
+  })
+  CompanyId receiverId;
 
 }

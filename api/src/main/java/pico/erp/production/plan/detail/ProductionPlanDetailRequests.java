@@ -72,6 +72,9 @@ public interface ProductionPlanDetailRequests {
     @NotNull
     UnitKind unit;
 
+    @Valid
+    CompanyId receiverId;
+
     public static CreateRequest from(ProductionPlanDetailData data) {
       return CreateRequest.builder()
         .id(data.getId())
@@ -86,6 +89,7 @@ public interface ProductionPlanDetailRequests {
         .startDate(data.getStartDate())
         .endDate(data.getEndDate())
         .unit(data.getUnit())
+        .receiverId(data.getReceiverId())
         .build();
     }
 

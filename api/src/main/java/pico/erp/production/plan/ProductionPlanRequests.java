@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import pico.erp.company.CompanyId;
 import pico.erp.item.ItemId;
 import pico.erp.project.ProjectId;
 import pico.erp.shared.data.UnitKind;
@@ -54,6 +55,10 @@ public interface ProductionPlanRequests {
     @Valid
     @NotNull
     UserId plannerId;
+
+    @Valid
+    @NotNull
+    CompanyId receiverId;
 
   }
 

@@ -245,6 +245,7 @@ public class ProductionPlanDetailServiceLogic implements ProductionPlanDetailSer
       });
       results.addAll(context.getGenerated());
     }
+    results.getLast().setReceiverId(plan.getReceiverId());
     results.stream()
       .map(data -> ProductionPlanDetailRequests.CreateRequest.from(data))
       .forEach(this::create);

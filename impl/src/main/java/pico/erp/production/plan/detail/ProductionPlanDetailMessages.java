@@ -79,6 +79,9 @@ public interface ProductionPlanDetailMessages {
       @NotNull
       UnitKind unit;
 
+      @Valid
+      CompanyId receiverId;
+
     }
 
     @Value

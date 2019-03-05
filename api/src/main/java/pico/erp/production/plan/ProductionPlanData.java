@@ -3,6 +3,7 @@ package pico.erp.production.plan;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import lombok.Data;
+import pico.erp.company.CompanyId;
 import pico.erp.item.ItemId;
 import pico.erp.project.ProjectId;
 import pico.erp.shared.data.UnitKind;
@@ -42,6 +43,8 @@ public class ProductionPlanData {
   UnitKind unit;
 
   UserId plannerId;
+
+  CompanyId receiverId;
 
   boolean updatable;
 

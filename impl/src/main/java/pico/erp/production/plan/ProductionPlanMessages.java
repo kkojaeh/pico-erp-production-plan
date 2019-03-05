@@ -10,6 +10,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.Value;
+import pico.erp.company.CompanyId;
 import pico.erp.item.ItemId;
 import pico.erp.project.ProjectId;
 import pico.erp.shared.data.UnitKind;
@@ -57,6 +58,10 @@ public interface ProductionPlanMessages {
       @Valid
       @NotNull
       UserId plannerId;
+
+      @Valid
+      @NotNull
+      CompanyId receiverId;
 
     }
 

@@ -46,6 +46,8 @@ public class ProductionPlanDetailData {
 
   BigDecimal progressedQuantity;
 
+  BigDecimal progressRate;
+
   OffsetDateTime startDate;
 
   OffsetDateTime endDate;

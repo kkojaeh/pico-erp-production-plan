@@ -157,6 +157,7 @@ class ProductionPlanDetailServiceSpec extends Specification {
         startDate: planStartDate,
         endDate: planEndDate,
         actorId: actorId,
+        receiverId: receiverId,
         progressType: ProductionPlanDetailProgressTypeKind.PRODUCE
       )
     )
@@ -171,6 +172,7 @@ class ProductionPlanDetailServiceSpec extends Specification {
         startDate: planEndDate.plusDays(1),
         endDate: planEndDate.plusDays(2),
         actorId: actorId,
+        receiverId: receiverId,
         progressType: ProductionPlanDetailProgressTypeKind.PRODUCE
       )
     )

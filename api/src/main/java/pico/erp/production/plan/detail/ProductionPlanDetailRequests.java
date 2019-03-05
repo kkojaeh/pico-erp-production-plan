@@ -223,8 +223,6 @@ public interface ProductionPlanDetailRequests {
     @Min(0)
     BigDecimal progressedQuantity;
 
-    boolean completed;
-
   }
 
   @Data

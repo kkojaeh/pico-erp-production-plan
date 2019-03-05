@@ -389,6 +389,10 @@ public class ProductionPlanDetail implements Serializable {
       && this.receiverId != null;
   }
 
+  public BigDecimal getProgressRate() {
+    return progressedQuantity.divide(getPlannedQuantity(), 4, BigDecimal.ROUND_HALF_UP);
+  }
+
   public boolean isProgressable() {
     return status.isProgressable();
   }

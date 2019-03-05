@@ -123,6 +123,19 @@ public interface ProductionPlanDetailRequests {
 
     ProductionPlanDetailProgressTypeKind progressType;
 
+    public static UpdateRequest from(ProductionPlanDetailData data) {
+      return UpdateRequest.builder()
+        .id(data.getId())
+        .quantity(data.getQuantity())
+        .spareQuantity(data.getSpareQuantity())
+        .startDate(data.getStartDate())
+        .endDate(data.getEndDate())
+        .actorId(data.getActorId())
+        .receiverId(data.getReceiverId())
+        .progressType(data.getProgressType())
+        .build();
+    }
+
   }
 
   @Data

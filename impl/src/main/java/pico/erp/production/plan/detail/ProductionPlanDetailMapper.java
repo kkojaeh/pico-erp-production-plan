@@ -96,6 +96,7 @@ public abstract class ProductionPlanDetailMapper {
       .id(entity.getId())
       .plan(map(entity.getPlanId()))
       .itemId(entity.getItemId())
+      .itemSpecCode(entity.getItemSpecCode())
       .processId(entity.getProcessId())
       .processPreparationId(entity.getProcessPreparationId())
       .itemSpecId(entity.getItemSpecId())

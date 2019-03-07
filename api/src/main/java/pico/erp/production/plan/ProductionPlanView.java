@@ -25,7 +25,9 @@ public class ProductionPlanView {
 
   BigDecimal spareQuantity;
 
-  BigDecimal progressedQuantity;
+  BigDecimal completedQuantity;
+
+  BigDecimal progressRate;
 
   ProjectId projectId;
 

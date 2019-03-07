@@ -42,6 +42,7 @@ public class ProductionPlanQueryJpa implements ProductionPlanQuery {
       productionPlan.quantity,
       productionPlan.spareQuantity,
       productionPlan.completedQuantity,
+      productionPlan.progressRate,
       productionPlan.projectId,
       productionPlan.dueDate,
       productionPlan.completedDate,

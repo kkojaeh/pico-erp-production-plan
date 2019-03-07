@@ -51,7 +51,7 @@ public class ProductionPlanEventListener {
 
   @EventListener
   @JmsListener(destination = LISTENER_NAME + "."
-    + ProductionPlanDetailEvents.ProgressedEvent.CHANNEL)
+    + ProductionPlanDetailEvents.CompletedEvent.CHANNEL)
   public void onPlanDetailCompleted(ProductionPlanDetailEvents.CompletedEvent event) {
     val detail = planDetailService.get(event.getId());
     val plan = planService.get(detail.getPlanId());

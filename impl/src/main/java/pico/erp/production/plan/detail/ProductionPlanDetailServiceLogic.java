@@ -392,13 +392,15 @@ public class ProductionPlanDetailServiceLogic implements ProductionPlanDetailSer
     planDetailRepository.update(planDetail);
     events.addAll(response.getEvents());
     planDetail.getDependencies().forEach(dependency -> {
-      val dependedOns = planDetailRepository.findAllDependedOn(dependency.getId())
-        .collect(Collectors.toList());
-      val dependencyResponse = dependency.apply(
-        new ProductionPlanDetailMessages.RevalidateByDependedOns.Request(dependedOns)
-      );
-      planDetailRepository.update(dependency);
-      events.addAll(dependencyResponse.getEvents());
+      if (dependency.isUpdatable()) {
+        val dependedOns = planDetailRepository.findAllDependedOn(dependency.getId())
+          .collect(Collectors.toList());
+        val dependencyResponse = dependency.apply(
+          new ProductionPlanDetailMessages.RevalidateByDependedOns.Request(dependedOns)
+        );
+        planDetailRepository.update(dependency);
+        events.addAll(dependencyResponse.getEvents());
+      }
     });
     eventPublisher.publishEvents(events);
   }

@@ -101,11 +101,22 @@ public class ProductionPlanDetailServiceLogic implements ProductionPlanDetailSer
 
   @Override
   public void complete(ProductionPlanDetailRequests.CompleteRequest request) {
+    val events = new LinkedList<Event>();
     val planDetail = planDetailRepository.findBy(request.getId())
       .orElseThrow(ProductionPlanDetailExceptions.NotFoundException::new);
     val response = planDetail.apply(mapper.map(request));
+    events.addAll(response.getEvents());
     planDetailRepository.update(planDetail);
-    eventPublisher.publishEvents(response.getEvents());
+    planDetailRepository.findAllDependedOn(planDetail.getId()).forEach(depended -> {
+      val dependenciesCompleted = depended.getDependencies().stream()
+        .allMatch(dependency -> ProductionPlanDetailStatusKind.COMPLETED == dependency.getStatus());
+      if (dependenciesCompleted) {
+        events.add(
+          new ProductionPlanDetailEvents.DependenciesCompletedEvent(depended.getId())
+        );
+      }
+    });
+    eventPublisher.publishEvents(events);
   }
 
   @Override

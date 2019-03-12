@@ -116,6 +116,21 @@ public interface ProductionPlanDetailEvents {
   @Data
   @AllArgsConstructor
   @NoArgsConstructor
+  class DependenciesCompletedEvent implements Event {
+
+    public final static String CHANNEL = "event.production-plan-detail.dependencies-completed";
+
+    private ProductionPlanDetailId id;
+
+    public String channel() {
+      return CHANNEL;
+    }
+
+  }
+
+  @Data
+  @AllArgsConstructor
+  @NoArgsConstructor
   class DeletedEvent implements Event {
 
     public final static String CHANNEL = "event.production-plan-detail.deleted";

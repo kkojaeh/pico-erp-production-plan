@@ -280,9 +280,10 @@ public class ProductionPlanDetailServiceLogic implements ProductionPlanDetailSer
       context.add(detail);
     } else {
       ProductionPlanDetailData previous = null;
-      for (int i = 0; i < processes.size(); i++) {
+      int length = processes.size();
+      for (int i = 0; i < length; i++) {
         val process = processes.get(i);
-        val spareRatio = processes.subList(0, i + 1).stream()
+        val spareRatio = processes.subList(i, length).stream()
           .map(ProcessData::getLossRate)
           .reduce(BigDecimal.ONE, (acc, curr) -> curr.add(BigDecimal.ONE).multiply(acc))
           .subtract(BigDecimal.ONE)

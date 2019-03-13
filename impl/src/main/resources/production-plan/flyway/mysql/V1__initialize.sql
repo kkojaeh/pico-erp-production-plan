@@ -53,7 +53,7 @@ create table prp_production_plan_detail (
 
 create table prp_production_plan_detail_dependency (
 	plan_detail_id binary(16) not null,
-	plan_detail_dependency_id binary(50) not null,
+	plan_detail_dependency_id binary(16) not null,
 	primary key (plan_detail_id,plan_detail_dependency_id)
 ) engine=InnoDB;
 

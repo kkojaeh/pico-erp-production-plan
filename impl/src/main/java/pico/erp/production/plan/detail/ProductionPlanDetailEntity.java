@@ -148,7 +148,7 @@ public class ProductionPlanDetailEntity implements Serializable {
   @ElementCollection(fetch = FetchType.LAZY)
   @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
   @AttributeOverrides({
-    @AttributeOverride(name = "value", column = @Column(name = "PLAN_DETAIL_DEPENDENCY_ID", length = TypeDefinitions.ID_LENGTH, nullable = false))
+    @AttributeOverride(name = "value", column = @Column(name = "PLAN_DETAIL_DEPENDENCY_ID", length = TypeDefinitions.UUID_BINARY_LENGTH, nullable = false))
   })
   @CollectionTable(name = "PRP_PRODUCTION_PLAN_DETAIL_DEPENDENCY", joinColumns = @JoinColumn(name = "PLAN_DETAIL_ID"), uniqueConstraints = {
     @UniqueConstraint(columnNames = {"PLAN_DETAIL_ID", "PLAN_DETAIL_DEPENDENCY_ID"})

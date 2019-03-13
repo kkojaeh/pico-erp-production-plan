@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -44,6 +45,7 @@ import pico.erp.shared.event.EventPublisher;
 @Public
 @Transactional
 @Validated
+@Slf4j
 public class ProductionPlanDetailServiceLogic implements ProductionPlanDetailService {
 
   @Autowired
@@ -108,8 +110,14 @@ public class ProductionPlanDetailServiceLogic implements ProductionPlanDetailSer
     events.addAll(response.getEvents());
     planDetailRepository.update(planDetail);
     planDetailRepository.findAllDependedOn(planDetail.getId()).forEach(depended -> {
+      if (log.isDebugEnabled()) {
+        log.debug("plan detail complete depended : {}", depended);
+      }
       val dependenciesCompleted = depended.getDependencies().stream()
         .allMatch(dependency -> ProductionPlanDetailStatusKind.COMPLETED == dependency.getStatus());
+      if (log.isDebugEnabled()) {
+        log.debug("plan detail complete dependenciesCompleted : {}", dependenciesCompleted);
+      }
       if (dependenciesCompleted) {
         events.add(
           new ProductionPlanDetailEvents.DependenciesCompletedEvent(depended.getId())

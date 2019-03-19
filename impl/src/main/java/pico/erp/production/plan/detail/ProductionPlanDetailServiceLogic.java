@@ -174,6 +174,12 @@ public class ProductionPlanDetailServiceLogic implements ProductionPlanDetailSer
 
     val quantity = context.getQuantity(bom);
     val spareQuantity = context.getSpareQuantity(bom);
+    val unit = itemService.get(bom.getItemId()).getUnit();
+    val adjustedQuantity = quantity.add(quantity.multiply(spareRatio))
+      .setScale(unit.getPrecision(), BigDecimal.ROUND_HALF_UP);
+    val adjustedSpareQuantity = spareQuantity.add(spareQuantity.multiply(spareRatio))
+      .setScale(unit.getPrecision(), BigDecimal.ROUND_HALF_UP);
+
 
     val detail = ProductionPlanDetailData.builder()
       .id(ProductionPlanDetailId.generate())
@@ -182,11 +188,11 @@ public class ProductionPlanDetailServiceLogic implements ProductionPlanDetailSer
       .itemSpecCode(process.getItemSpecCode())
       .processId(process.getId())
       .processPreparationId(null)
-      .quantity(quantity.add(quantity.multiply(spareRatio)))
-      .spareQuantity(spareQuantity.add(spareQuantity.multiply(spareRatio)))
+      .quantity(adjustedQuantity)
+      .spareQuantity(adjustedSpareQuantity)
       .startDate(context.getStartDate(depth))
       .endDate(context.getEndDate(depth))
-      .unit(itemService.get(bom.getItemId()).getUnit())
+      .unit(unit)
       .build();
 
     val preparations = processPreparationService.getAll(process.getId()).stream()
@@ -281,6 +287,12 @@ public class ProductionPlanDetailServiceLogic implements ProductionPlanDetailSer
       val itemSpecCode =
         bom.getItemSpecId() != null ? itemSpecService.get(bom.getItemSpecId()).getCode()
           : ItemSpecCode.NOT_APPLICABLE;
+      val quantity = context.getQuantity(bom);
+      val spareQuantity = context.getSpareQuantity(bom);
+      val unit = itemService.get(bom.getItemId()).getUnit();
+      val adjustedQuantity = quantity.setScale(unit.getPrecision(), BigDecimal.ROUND_HALF_UP);
+      val adjustedSpareQuantity = spareQuantity
+        .setScale(unit.getPrecision(), BigDecimal.ROUND_HALF_UP);
       val detail = ProductionPlanDetailData.builder()
         .id(ProductionPlanDetailId.generate())
         .planId(context.getPlan().getId())
@@ -289,9 +301,9 @@ public class ProductionPlanDetailServiceLogic implements ProductionPlanDetailSer
         .itemSpecCode(itemSpecCode)
         .processId(null)
         .processPreparationId(null)
-        .quantity(context.getQuantity(bom))
-        .unit(itemService.get(bom.getItemId()).getUnit())
-        .spareQuantity(context.getSpareQuantity(bom))
+        .unit(unit)
+        .quantity(adjustedQuantity)
+        .spareQuantity(adjustedSpareQuantity)
         .startDate(context.getStartDate(depth))
         .endDate(context.getEndDate(depth))
         .build();

@@ -3,7 +3,7 @@ package pico.erp.production.plan.detail;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
 import java.util.Set;
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
@@ -94,9 +94,9 @@ public class ProductionPlanDetailEntity implements Serializable {
   @Column(precision = 19, scale = 2)
   BigDecimal progressedQuantity;
 
-  OffsetDateTime startDate;
+  LocalDateTime startDate;
 
-  OffsetDateTime endDate;
+  LocalDateTime endDate;
 
   @AttributeOverrides({
     @AttributeOverride(name = "value", column = @Column(name = "ACTOR_ID", length = TypeDefinitions.ID_LENGTH))
@@ -108,11 +108,11 @@ public class ProductionPlanDetailEntity implements Serializable {
   })
   CompanyId receiverId;
 
-  OffsetDateTime completedDate;
+  LocalDateTime completedDate;
 
-  OffsetDateTime canceledDate;
+  LocalDateTime canceledDate;
 
-  OffsetDateTime determinedDate;
+  LocalDateTime determinedDate;
 
   @Column(length = TypeDefinitions.ENUM_LENGTH)
   @Enumerated(EnumType.STRING)
@@ -132,7 +132,7 @@ public class ProductionPlanDetailEntity implements Serializable {
 
   @CreatedDate
   @Column(updatable = false)
-  OffsetDateTime createdDate;
+  LocalDateTime createdDate;
 
   @Embedded
   @AttributeOverrides({
@@ -143,7 +143,7 @@ public class ProductionPlanDetailEntity implements Serializable {
   Auditor lastModifiedBy;
 
   @LastModifiedDate
-  OffsetDateTime lastModifiedDate;
+  LocalDateTime lastModifiedDate;
 
   @ElementCollection(fetch = FetchType.LAZY)
   @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)

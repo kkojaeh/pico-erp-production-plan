@@ -2,7 +2,7 @@ package pico.erp.production.plan.detail;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.Collections;
@@ -67,19 +67,19 @@ public class ProductionPlanDetail implements Serializable {
 
   BigDecimal progressedQuantity;
 
-  OffsetDateTime startDate;
+  LocalDateTime startDate;
 
-  OffsetDateTime endDate;
+  LocalDateTime endDate;
 
   CompanyId actorId;
 
   CompanyId receiverId;
 
-  OffsetDateTime completedDate;
+  LocalDateTime completedDate;
 
-  OffsetDateTime determinedDate;
+  LocalDateTime determinedDate;
 
-  OffsetDateTime canceledDate;
+  LocalDateTime canceledDate;
 
   ProductionPlanDetailProgressTypeKind progressType;
 
@@ -184,7 +184,7 @@ public class ProductionPlanDetail implements Serializable {
       throw new ProductionPlanDetailExceptions.CannotDetermineException();
     }
     this.status = ProductionPlanDetailStatusKind.DETERMINED;
-    this.determinedDate = OffsetDateTime.now();
+    this.determinedDate = LocalDateTime.now();
     return new ProductionPlanDetailMessages.Determine.Response(
       Arrays.asList(new ProductionPlanDetailEvents.DeterminedEvent(this.id))
     );
@@ -279,7 +279,7 @@ public class ProductionPlanDetail implements Serializable {
       throw new ProductionPlanDetailExceptions.CannotCancelException();
     }
     this.status = ProductionPlanDetailStatusKind.CANCELED;
-    this.canceledDate = OffsetDateTime.now();
+    this.canceledDate = LocalDateTime.now();
     return new ProductionPlanDetailMessages.Cancel.Response(
       Arrays.asList(new ProductionPlanDetailEvents.CanceledEvent(this.id))
     );
@@ -291,7 +291,7 @@ public class ProductionPlanDetail implements Serializable {
       throw new ProductionPlanDetailExceptions.CannotCompleteException();
     }
     this.status = ProductionPlanDetailStatusKind.COMPLETED;
-    this.completedDate = OffsetDateTime.now();
+    this.completedDate = LocalDateTime.now();
     return new ProductionPlanDetailMessages.Complete.Response(
       Arrays.asList(new ProductionPlanDetailEvents.CompletedEvent(this.id))
     );
@@ -346,13 +346,13 @@ public class ProductionPlanDetail implements Serializable {
     return quantity.add(spareQuantity);
   }
 
-  protected OffsetDateTime getStartableDate() {
-    val endDates = new HashMap<ProductionPlanDetailGroupId, OffsetDateTime>();
+  protected LocalDateTime getStartableDate() {
+    val endDates = new HashMap<ProductionPlanDetailGroupId, LocalDateTime>();
     for (ProductionPlanDetail dependency : dependencies) {
       val groupId = dependency.getGroupId();
       val endDate = dependency.getEndDate();
       if (!endDates.containsKey(groupId)) {
-        endDates.put(groupId, OffsetDateTime.MAX);
+        endDates.put(groupId, LocalDateTime.MAX);
       }
       val mappedDate = endDates.get(groupId);
       if (endDate.isBefore(mappedDate)) {
@@ -361,7 +361,7 @@ public class ProductionPlanDetail implements Serializable {
     }
     return endDates.values().stream()
       .max(Comparator.comparing(date -> date))
-      .orElse(OffsetDateTime.now());
+      .orElse(LocalDateTime.now());
   }
 
   public boolean isCancelable() {

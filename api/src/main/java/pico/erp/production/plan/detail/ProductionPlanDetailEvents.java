@@ -1,6 +1,6 @@
 package pico.erp.production.plan.detail;
 
-import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -150,9 +150,9 @@ public interface ProductionPlanDetailEvents {
 
     public final static String CHANNEL = "event.production-plan-detail.rescheduled";
 
-    OffsetDateTime beforeStartDate;
+    LocalDateTime beforeStartDate;
 
-    OffsetDateTime beforeEndDate;
+    LocalDateTime beforeEndDate;
 
     private ProductionPlanDetailId id;
 

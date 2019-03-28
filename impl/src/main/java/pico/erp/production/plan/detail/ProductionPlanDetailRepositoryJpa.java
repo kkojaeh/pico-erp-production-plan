@@ -44,12 +44,12 @@ public class ProductionPlanDetailRepositoryJpa implements ProductionPlanDetailRe
 
   @Override
   public void deleteBy(ProductionPlanDetailId id) {
-    repository.delete(id);
+    repository.deleteById(id);
   }
 
   @Override
   public boolean exists(ProductionPlanDetailId id) {
-    return repository.exists(id);
+    return repository.existsById(id);
   }
 
   @Override
@@ -66,13 +66,13 @@ public class ProductionPlanDetailRepositoryJpa implements ProductionPlanDetailRe
 
   @Override
   public Optional<ProductionPlanDetail> findBy(ProductionPlanDetailId id) {
-    return Optional.ofNullable(repository.findOne(id))
+    return repository.findById(id)
       .map(mapper::jpa);
   }
 
   @Override
   public void update(ProductionPlanDetail planItem) {
-    val entity = repository.findOne(planItem.getId());
+    val entity = repository.findById(planItem.getId()).get();
     mapper.pass(mapper.jpa(planItem), entity);
     repository.save(entity);
   }

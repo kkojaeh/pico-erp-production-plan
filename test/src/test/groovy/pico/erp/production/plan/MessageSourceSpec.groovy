@@ -1,28 +1,32 @@
 package pico.erp.production.plan
 
+import kkojaeh.spring.boot.component.SpringBootTestComponent
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.context.MessageSource
-import org.springframework.context.annotation.ComponentScan
-import org.springframework.context.annotation.Configuration
 import org.springframework.context.i18n.LocaleContextHolder
 import org.springframework.test.annotation.Rollback
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.transaction.annotation.Transactional
+import pico.erp.bom.BomApplication
+import pico.erp.company.CompanyApplication
+import pico.erp.item.ItemApplication
+import pico.erp.process.ProcessApplication
 import pico.erp.production.plan.detail.ProductionPlanDetailProgressTypeKind
 import pico.erp.production.plan.detail.ProductionPlanDetailStatusKind
-import pico.erp.shared.IntegrationConfiguration
+import pico.erp.project.ProjectApplication
+import pico.erp.shared.TestParentApplication
+import pico.erp.user.UserApplication
 import spock.lang.Specification
 
 import java.util.stream.Collectors
 import java.util.stream.Stream
 
-@SpringBootTest(classes = [IntegrationConfiguration])
+@SpringBootTest(classes = [ProductionPlanApplication, TestConfig])
+@SpringBootTestComponent(parent = TestParentApplication, siblings = [ItemApplication, UserApplication, ProjectApplication, BomApplication, ProcessApplication, CompanyApplication])
 @Transactional
 @Rollback
 @ActiveProfiles("test")
-@Configuration
-@ComponentScan("pico.erp.config")
 class MessageSourceSpec extends Specification {
 
   @Autowired

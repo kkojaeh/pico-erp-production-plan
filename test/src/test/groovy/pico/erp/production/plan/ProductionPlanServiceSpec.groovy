@@ -1,28 +1,32 @@
 package pico.erp.production.plan
 
+import kkojaeh.spring.boot.component.SpringBootTestComponent
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.context.annotation.ComponentScan
-import org.springframework.context.annotation.Configuration
 import org.springframework.test.annotation.Rollback
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.transaction.annotation.Transactional
+import pico.erp.bom.BomApplication
+import pico.erp.company.CompanyApplication
 import pico.erp.company.CompanyId
+import pico.erp.item.ItemApplication
 import pico.erp.item.ItemId
+import pico.erp.process.ProcessApplication
+import pico.erp.project.ProjectApplication
 import pico.erp.project.ProjectId
-import pico.erp.shared.IntegrationConfiguration
+import pico.erp.shared.TestParentApplication
 import pico.erp.shared.data.UnitKind
+import pico.erp.user.UserApplication
 import pico.erp.user.UserId
 import spock.lang.Specification
 
-import java.time.OffsetDateTime
+import java.time.LocalDateTime
 
-@SpringBootTest(classes = [IntegrationConfiguration])
+@SpringBootTest(classes = [ProductionPlanApplication, TestConfig])
+@SpringBootTestComponent(parent = TestParentApplication, siblings = [ItemApplication, UserApplication, ProjectApplication, BomApplication, ProcessApplication, CompanyApplication])
 @Transactional
 @Rollback
 @ActiveProfiles("test")
-@Configuration
-@ComponentScan("pico.erp.config")
 class ProductionPlanServiceSpec extends Specification {
 
   @Autowired
@@ -42,7 +46,7 @@ class ProductionPlanServiceSpec extends Specification {
 
   def plannerId = UserId.from("kjh")
 
-  def planDueDate = OffsetDateTime.now().plusDays(2)
+  def planDueDate = LocalDateTime.now().plusDays(2)
 
   def receiverId = CompanyId.from("CUST2")
 

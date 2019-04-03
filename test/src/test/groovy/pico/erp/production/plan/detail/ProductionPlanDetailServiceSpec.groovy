@@ -1,10 +1,8 @@
 package pico.erp.production.plan.detail
 
-
+import kkojaeh.spring.boot.component.SpringBootTestComponent
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.context.annotation.ComponentScan
-import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Lazy
 import org.springframework.test.annotation.Rollback
 import org.springframework.test.context.ActiveProfiles
@@ -12,23 +10,21 @@ import org.springframework.transaction.annotation.Transactional
 import pico.erp.bom.BomService
 import pico.erp.company.CompanyId
 import pico.erp.item.ItemId
-import pico.erp.production.plan.ProductionPlanId
-import pico.erp.production.plan.ProductionPlanRequests
-import pico.erp.production.plan.ProductionPlanService
+import pico.erp.production.plan.*
 import pico.erp.project.ProjectId
-import pico.erp.shared.IntegrationConfiguration
+import pico.erp.shared.ComponentDefinitionServiceLoaderTestComponentSiblingsSupplier
+import pico.erp.shared.TestParentApplication
 import pico.erp.shared.data.UnitKind
 import pico.erp.user.UserId
 import spock.lang.Specification
 
-import java.time.OffsetDateTime
+import java.time.LocalDateTime
 
-@SpringBootTest(classes = [IntegrationConfiguration])
+@SpringBootTest(classes = [ProductionPlanApplication, TestConfig])
+@SpringBootTestComponent(parent = TestParentApplication, siblingsSupplier = ComponentDefinitionServiceLoaderTestComponentSiblingsSupplier.class)
 @Transactional
 @Rollback
 @ActiveProfiles("test")
-@Configuration
-@ComponentScan("pico.erp.config")
 class ProductionPlanDetailServiceSpec extends Specification {
 
   @Autowired
@@ -51,7 +47,7 @@ class ProductionPlanDetailServiceSpec extends Specification {
 
   def projectId = ProjectId.from("sample-project1")
 
-  def planStartDate = OffsetDateTime.now().plusDays(2)
+  def planStartDate = LocalDateTime.now().plusDays(2)
 
   def planEndDate = planStartDate.plusDays(1)
 
@@ -74,7 +70,7 @@ class ProductionPlanDetailServiceSpec extends Specification {
         quantity: 100,
         spareQuantity: 10,
         projectId: projectId,
-        dueDate: OffsetDateTime.now().plusDays(7),
+        dueDate: LocalDateTime.now().plusDays(7),
         unit: unit,
         plannerId: plannerId,
         receiverId: receiverId
@@ -87,7 +83,7 @@ class ProductionPlanDetailServiceSpec extends Specification {
         quantity: 100,
         spareQuantity: 10,
         projectId: projectId,
-        dueDate: OffsetDateTime.now().plusDays(7),
+        dueDate: LocalDateTime.now().plusDays(7),
         unit: unit,
         plannerId: plannerId,
         receiverId: receiverId

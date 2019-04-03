@@ -1,7 +1,7 @@
 package pico.erp.production.plan.detail;
 
 import java.math.BigDecimal;
-import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
@@ -63,11 +63,11 @@ public interface ProductionPlanDetailRequests {
 
     @Future
     @NotNull
-    OffsetDateTime startDate;
+    LocalDateTime startDate;
 
     @Future
     @NotNull
-    OffsetDateTime endDate;
+    LocalDateTime endDate;
 
     @NotNull
     UnitKind unit;
@@ -115,11 +115,11 @@ public interface ProductionPlanDetailRequests {
 
     @Future
     @NotNull
-    OffsetDateTime startDate;
+    LocalDateTime startDate;
 
     @Future
     @NotNull
-    OffsetDateTime endDate;
+    LocalDateTime endDate;
 
     CompanyId actorId;
 
@@ -201,11 +201,11 @@ public interface ProductionPlanDetailRequests {
     ProductionPlanDetailId id;
 
     @NotNull
-    OffsetDateTime startDate;
+    LocalDateTime startDate;
 
     @Future
     @NotNull
-    OffsetDateTime endDate;
+    LocalDateTime endDate;
 
   }
 
@@ -305,10 +305,10 @@ public interface ProductionPlanDetailRequests {
     ProductionPlanDetailId dependencyId;
 
     @NotNull
-    OffsetDateTime beforeStartDate;
+    LocalDateTime beforeStartDate;
 
     @NotNull
-    OffsetDateTime beforeEndDate;
+    LocalDateTime beforeEndDate;
 
   }
 }

@@ -1,7 +1,7 @@
 package pico.erp.production.plan.detail;
 
 import java.math.BigDecimal;
-import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -10,11 +10,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import kkojaeh.spring.boot.component.ComponentAutowired;
+import kkojaeh.spring.boot.component.ComponentBean;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -35,14 +36,13 @@ import pico.erp.production.plan.ProductionPlanProperties;
 import pico.erp.production.plan.ProductionPlanService;
 import pico.erp.production.plan.detail.ProductionPlanDetailRequests.GenerateRequest;
 import pico.erp.production.plan.detail.ProductionPlanDetailRequests.RescheduleByDependencyRequest;
-import pico.erp.shared.Public;
 import pico.erp.shared.data.UnitKind;
 import pico.erp.shared.event.Event;
 import pico.erp.shared.event.EventPublisher;
 
 @SuppressWarnings("Duplicates")
 @Service
-@Public
+@ComponentBean
 @Transactional
 @Validated
 @Slf4j
@@ -57,16 +57,13 @@ public class ProductionPlanDetailServiceLogic implements ProductionPlanDetailSer
   @Autowired
   private ProductionPlanDetailMapper mapper;
 
-  @Lazy
-  @Autowired
+  @ComponentAutowired
   private BomService bomService;
 
-  @Lazy
-  @Autowired
+  @ComponentAutowired
   private ItemSpecService itemSpecService;
 
-  @Lazy
-  @Autowired
+  @ComponentAutowired
   private ItemService itemService;
 
   @Autowired
@@ -75,12 +72,10 @@ public class ProductionPlanDetailServiceLogic implements ProductionPlanDetailSer
   @Autowired
   private ProductionPlanService productionPlanService;
 
-  @Lazy
-  @Autowired
+  @ComponentAutowired
   private ProcessService processService;
 
-  @Lazy
-  @Autowired
+  @ComponentAutowired
   private ProcessPreparationService processPreparationService;
 
   @Override
@@ -231,7 +226,7 @@ public class ProductionPlanDetailServiceLogic implements ProductionPlanDetailSer
 
   public void generate(GenerateRequest request) {
     val plan = productionPlanService.get(request.getPlanId());
-    val startDate = OffsetDateTime.now().plusDays(1)
+    val startDate = LocalDateTime.now().plusDays(1)
       .with(properties.getDetailGenerationPolicy().getStartTime());
     val endDate = plan.getDueDate().minusDays(1)
       .with(properties.getDetailGenerationPolicy().getEndTime());
@@ -440,9 +435,9 @@ public class ProductionPlanDetailServiceLogic implements ProductionPlanDetailSer
 
     private final BomHierarchyData root;
 
-    private final OffsetDateTime startDate;
+    private final LocalDateTime startDate;
 
-    private final OffsetDateTime endDate;
+    private final LocalDateTime endDate;
 
     private final long intervalHours;
 
@@ -450,7 +445,7 @@ public class ProductionPlanDetailServiceLogic implements ProductionPlanDetailSer
 
     private GenerateContext(ProductionPlanData plan, BomHierarchyData bomHierarchy) {
       this.plan = plan;
-      this.startDate = OffsetDateTime.now().plusDays(1)
+      this.startDate = LocalDateTime.now().plusDays(1)
         .with(properties.getDetailGenerationPolicy().getStartTime());
       this.endDate = plan.getDueDate().minusDays(1)
         .with(properties.getDetailGenerationPolicy().getEndTime());
@@ -494,7 +489,7 @@ public class ProductionPlanDetailServiceLogic implements ProductionPlanDetailSer
       return intervalHours * 60 / 10;
     }
 
-    OffsetDateTime getEndDate(long depth) {
+    LocalDateTime getEndDate(long depth) {
       return startDate.plusHours((maxDepth - depth) * intervalHours)
         .minusMinutes(gapMinutes());
     }
@@ -513,7 +508,7 @@ public class ProductionPlanDetailServiceLogic implements ProductionPlanDetailSer
           .multiply(plan.getPlannedQuantity()).setScale(5, BigDecimal.ROUND_HALF_UP);
     }
 
-    OffsetDateTime getStartDate(long depth) {
+    LocalDateTime getStartDate(long depth) {
       return startDate.plusHours((maxDepth - depth - 1) * intervalHours)
         .plusMinutes(gapMinutes());
     }

@@ -1,5 +1,6 @@
 package pico.erp.production.plan;
 
+import kkojaeh.spring.boot.component.ComponentBean;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -8,12 +9,11 @@ import org.springframework.validation.annotation.Validated;
 import pico.erp.production.plan.ProductionPlanRequests.CancelRequest;
 import pico.erp.production.plan.ProductionPlanRequests.CompleteRequest;
 import pico.erp.production.plan.ProductionPlanRequests.DetermineRequest;
-import pico.erp.shared.Public;
 import pico.erp.shared.event.EventPublisher;
 
 @SuppressWarnings("Duplicates")
 @Service
-@Public
+@ComponentBean
 @Transactional
 @Validated
 public class ProductionPlanServiceLogic implements ProductionPlanService {

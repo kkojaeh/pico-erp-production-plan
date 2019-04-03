@@ -1,7 +1,7 @@
 package pico.erp.production.plan;
 
 import java.math.BigDecimal;
-import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
 import lombok.Data;
 import pico.erp.company.CompanyId;
 import pico.erp.item.ItemId;
@@ -28,13 +28,13 @@ public class ProductionPlanData {
 
   ProjectId projectId;
 
-  OffsetDateTime dueDate;
+  LocalDateTime dueDate;
 
-  OffsetDateTime completedDate;
+  LocalDateTime completedDate;
 
-  OffsetDateTime determinedDate;
+  LocalDateTime determinedDate;
 
-  OffsetDateTime canceledDate;
+  LocalDateTime canceledDate;
 
   ProductionPlanStatusKind status;
 

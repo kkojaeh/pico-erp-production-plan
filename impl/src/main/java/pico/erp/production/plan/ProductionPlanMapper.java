@@ -1,6 +1,7 @@
 package pico.erp.production.plan;
 
 import java.util.Optional;
+import kkojaeh.spring.boot.component.ComponentAutowired;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
@@ -31,31 +32,26 @@ public abstract class ProductionPlanMapper {
   @Autowired
   protected AuditorAware<Auditor> auditorAware;
 
-  @Lazy
-  @Autowired
+  @ComponentAutowired
   protected ItemService itemService;
 
-  @Lazy
-  @Autowired
+  @ComponentAutowired
   protected ItemSpecService itemSpecService;
 
   @Autowired
   protected ProductionPlanCodeGenerator productionPlanCodeGenerator;
 
-  @Lazy
-  @Autowired
+  @ComponentAutowired
   private CompanyService companyService;
 
-  @Lazy
-  @Autowired
+  @ComponentAutowired
   private UserService userService;
 
   @Lazy
   @Autowired
   private ProductionPlanRepository productionPlanRepository;
 
-  @Lazy
-  @Autowired
+  @ComponentAutowired
   private ProjectService projectService;
 
   @Mappings({

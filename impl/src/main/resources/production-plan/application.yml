@@ -1,22 +1,25 @@
-banner:
-  location: classpath:production-plan/banner.txt
-
 spring:
+  jmx:
+    default-domain: production-plan
+  banner:
+    location: classpath:production-plan/banner.txt
   application:
     name: pico-production-plan
   session:
     store-type: NONE
   messages:
-    cache-seconds: 60
     basename: production-plan-messages
     encoding: UTF-8
   datasource:
-    url: ${ORDER_DATASOURCE_URL:${DATASOURCE_URL:jdbc:p6spy:hsqldb:mem:production-plan}}
-    driver-class-name: ${ORDER_DATASOURCE_DRIVER_CLASS_NAME:${DATASOURCE_DRIVER_CLASS_NAME:com.p6spy.engine.spy.P6SpyDriver}}
-    username: ${ORDER_DATASOURCE_USERNAME:${DATASOURCE_USERNAME:as}}
-    password: ${ORDER_DATASOURCE_PASSWORD:${DATASOURCE_PASSWORD:null}}
+    name: production-plan-datasource
+    url: ${PRODUCTION_PLAN_DATASOURCE_URL:${DATASOURCE_URL:jdbc:p6spy:hsqldb:mem:production-plan}}
+    driver-class-name: ${PRODUCTION_PLAN_DATASOURCE_DRIVER_CLASS_NAME:${DATASOURCE_DRIVER_CLASS_NAME:com.p6spy.engine.spy.P6SpyDriver}}
+    username: ${PRODUCTION_PLAN_DATASOURCE_USERNAME:${DATASOURCE_USERNAME:as}}
+    password: ${PRODUCTION_PLAN_DATASOURCE_PASSWORD:${DATASOURCE_PASSWORD:null}}
     hikari:
       maximum-pool-size: 4
+  flyway:
+    enabled: false
   jpa:
     database: HSQL
     hibernate:
@@ -82,9 +85,6 @@ logging:
   level:
     org:
       springframework: INFO
-
-flyway:
-  enabled: false
 
 production-plan:
   charger-group:

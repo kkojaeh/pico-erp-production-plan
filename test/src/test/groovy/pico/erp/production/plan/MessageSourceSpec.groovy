@@ -8,22 +8,17 @@ import org.springframework.context.i18n.LocaleContextHolder
 import org.springframework.test.annotation.Rollback
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.transaction.annotation.Transactional
-import pico.erp.bom.BomApplication
-import pico.erp.company.CompanyApplication
-import pico.erp.item.ItemApplication
-import pico.erp.process.ProcessApplication
 import pico.erp.production.plan.detail.ProductionPlanDetailProgressTypeKind
 import pico.erp.production.plan.detail.ProductionPlanDetailStatusKind
-import pico.erp.project.ProjectApplication
+import pico.erp.shared.ComponentDefinitionServiceLoaderTestComponentSiblingsSupplier
 import pico.erp.shared.TestParentApplication
-import pico.erp.user.UserApplication
 import spock.lang.Specification
 
 import java.util.stream.Collectors
 import java.util.stream.Stream
 
 @SpringBootTest(classes = [ProductionPlanApplication, TestConfig])
-@SpringBootTestComponent(parent = TestParentApplication, siblings = [ItemApplication, UserApplication, ProjectApplication, BomApplication, ProcessApplication, CompanyApplication])
+@SpringBootTestComponent(parent = TestParentApplication, siblingsSupplier = ComponentDefinitionServiceLoaderTestComponentSiblingsSupplier.class)
 @Transactional
 @Rollback
 @ActiveProfiles("test")

@@ -10,8 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import kkojaeh.spring.boot.component.Give;
-import kkojaeh.spring.boot.component.Take;
+import kkojaeh.spring.boot.component.ComponentAutowired;
+import kkojaeh.spring.boot.component.ComponentBean;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -42,7 +42,7 @@ import pico.erp.shared.event.EventPublisher;
 
 @SuppressWarnings("Duplicates")
 @Service
-@Give
+@ComponentBean
 @Transactional
 @Validated
 @Slf4j
@@ -57,13 +57,13 @@ public class ProductionPlanDetailServiceLogic implements ProductionPlanDetailSer
   @Autowired
   private ProductionPlanDetailMapper mapper;
 
-  @Take
+  @ComponentAutowired
   private BomService bomService;
 
-  @Take
+  @ComponentAutowired
   private ItemSpecService itemSpecService;
 
-  @Take
+  @ComponentAutowired
   private ItemService itemService;
 
   @Autowired
@@ -72,10 +72,10 @@ public class ProductionPlanDetailServiceLogic implements ProductionPlanDetailSer
   @Autowired
   private ProductionPlanService productionPlanService;
 
-  @Take
+  @ComponentAutowired
   private ProcessService processService;
 
-  @Take
+  @ComponentAutowired
   private ProcessPreparationService processPreparationService;
 
   @Override

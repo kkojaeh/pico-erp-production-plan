@@ -16,16 +16,16 @@ dependencies {
 
   compile("com.github.kkojaeh.pico-erp-shared:test:${sharedVersion}")
 
-  testCompile("com.github.kkojaeh.pico-erp-user:test:${userVersion}")
+  testRuntime("com.github.kkojaeh.pico-erp-user:test:${userVersion}")
 
-  testCompile("com.github.kkojaeh.pico-erp-item:test:${itemVersion}")
+  testRuntime("com.github.kkojaeh.pico-erp-item:test:${itemVersion}")
 
-  testCompile("com.github.kkojaeh.pico-erp-project:test:${projectVersion}")
+  testRuntime("com.github.kkojaeh.pico-erp-project:test:${projectVersion}")
 
-  testCompile("com.github.kkojaeh.pico-erp-company:test:${companyVersion}")
+  testRuntime("com.github.kkojaeh.pico-erp-company:test:${companyVersion}")
 
-  testCompile("com.github.kkojaeh.pico-erp-bom:test:${bomVersion}")
+  testRuntime("com.github.kkojaeh.pico-erp-bom:test:${bomVersion}")
 
-  testCompile("com.github.kkojaeh.pico-erp-process:test:${processVersion}")
+  testRuntime("com.github.kkojaeh.pico-erp-process:test:${processVersion}")
 
 }

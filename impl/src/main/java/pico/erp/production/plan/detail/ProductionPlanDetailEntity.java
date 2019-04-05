@@ -3,7 +3,7 @@ package pico.erp.production.plan.detail;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.Set;
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
@@ -19,6 +19,8 @@ import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.Index;
 import javax.persistence.JoinColumn;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import lombok.AccessLevel;
@@ -30,9 +32,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.data.annotation.CreatedBy;
-import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
-import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import pico.erp.company.CompanyId;
 import pico.erp.item.ItemId;
@@ -94,9 +94,9 @@ public class ProductionPlanDetailEntity implements Serializable {
   @Column(precision = 19, scale = 2)
   BigDecimal progressedQuantity;
 
-  LocalDateTime startDate;
+  OffsetDateTime startDate;
 
-  LocalDateTime endDate;
+  OffsetDateTime endDate;
 
   @AttributeOverrides({
     @AttributeOverride(name = "value", column = @Column(name = "ACTOR_ID", length = TypeDefinitions.ID_LENGTH))
@@ -108,11 +108,11 @@ public class ProductionPlanDetailEntity implements Serializable {
   })
   CompanyId receiverId;
 
-  LocalDateTime completedDate;
+  OffsetDateTime completedDate;
 
-  LocalDateTime canceledDate;
+  OffsetDateTime canceledDate;
 
-  LocalDateTime determinedDate;
+  OffsetDateTime determinedDate;
 
   @Column(length = TypeDefinitions.ENUM_LENGTH)
   @Enumerated(EnumType.STRING)
@@ -130,9 +130,8 @@ public class ProductionPlanDetailEntity implements Serializable {
   @CreatedBy
   Auditor createdBy;
 
-  @CreatedDate
   @Column(updatable = false)
-  LocalDateTime createdDate;
+  OffsetDateTime createdDate;
 
   @Embedded
   @AttributeOverrides({
@@ -142,8 +141,7 @@ public class ProductionPlanDetailEntity implements Serializable {
   @LastModifiedBy
   Auditor lastModifiedBy;
 
-  @LastModifiedDate
-  LocalDateTime lastModifiedDate;
+  OffsetDateTime lastModifiedDate;
 
   @ElementCollection(fetch = FetchType.LAZY)
   @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
@@ -179,16 +177,15 @@ public class ProductionPlanDetailEntity implements Serializable {
   @Enumerated(EnumType.STRING)
   UnitKind unit;
 
-  /*
-  @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-  @JoinColumn(name = "PROJECT_ID")
-  @OrderBy("createdDate DESC")
-  List<ProjectChargeEntity> charges;
+  @PrePersist
+  private void onCreate() {
+    createdDate = OffsetDateTime.now();
+    lastModifiedDate = OffsetDateTime.now();
+  }
 
-  @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-  @JoinColumn(name = "PROJECT_ID")
-  @OrderBy("createdDate DESC")
-  List<ProjectSaleItemEntity> saleItems;
-  */
+  @PreUpdate
+  private void onUpdate() {
+    lastModifiedDate = OffsetDateTime.now();
+  }
 
 }

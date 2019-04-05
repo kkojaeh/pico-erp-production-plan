@@ -1,7 +1,7 @@
 package pico.erp.production.plan;
 
-import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.OffsetDateTime;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -16,7 +16,7 @@ public class ProductionPlanCodeGeneratorImpl implements ProductionPlanCodeGenera
 
   @Override
   public ProductionPlanCode generate(ProductionPlan productionPlan) {
-    val now = LocalDateTime.now();
+    val now = OffsetDateTime.now();
     val begin = now.with(LocalTime.MIN);
     val end = now.with(LocalTime.MAX);
     val count = productionPlanRepository.countCreatedBetween(begin, end);

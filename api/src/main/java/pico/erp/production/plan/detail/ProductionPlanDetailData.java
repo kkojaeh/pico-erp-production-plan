@@ -1,7 +1,7 @@
 package pico.erp.production.plan.detail;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -48,23 +48,23 @@ public class ProductionPlanDetailData {
 
   BigDecimal progressRate;
 
-  LocalDateTime startDate;
+  OffsetDateTime startDate;
 
-  LocalDateTime endDate;
+  OffsetDateTime endDate;
 
   CompanyId actorId;
 
   CompanyId receiverId;
 
-  LocalDateTime completedDate;
+  OffsetDateTime completedDate;
 
   ProductionPlanDetailProgressTypeKind progressType;
 
   ProductionPlanDetailStatusKind status;
 
-  LocalDateTime determinedDate;
+  OffsetDateTime determinedDate;
 
-  LocalDateTime canceledDate;
+  OffsetDateTime canceledDate;
 
   int order;
 

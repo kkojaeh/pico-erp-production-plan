@@ -1,7 +1,7 @@
 package pico.erp.production.plan;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -31,19 +31,19 @@ public class ProductionPlanView {
 
   ProjectId projectId;
 
-  LocalDateTime dueDate;
+  OffsetDateTime dueDate;
 
-  LocalDateTime completedDate;
+  OffsetDateTime completedDate;
 
-  LocalDateTime determinedDate;
+  OffsetDateTime determinedDate;
 
-  LocalDateTime canceledDate;
+  OffsetDateTime canceledDate;
 
   ProductionPlanStatusKind status;
 
   Auditor createdBy;
 
-  LocalDateTime createdDate;
+  OffsetDateTime createdDate;
 
   UnitKind unit;
 
@@ -61,9 +61,9 @@ public class ProductionPlanView {
 
     Set<ProductionPlanStatusKind> statuses;
 
-    LocalDateTime startDueDate;
+    OffsetDateTime startDueDate;
 
-    LocalDateTime endDueDate;
+    OffsetDateTime endDueDate;
 
   }
 

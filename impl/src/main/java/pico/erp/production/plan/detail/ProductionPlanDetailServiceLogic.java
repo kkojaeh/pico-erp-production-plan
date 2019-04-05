@@ -1,7 +1,7 @@
 package pico.erp.production.plan.detail;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -226,7 +226,7 @@ public class ProductionPlanDetailServiceLogic implements ProductionPlanDetailSer
 
   public void generate(GenerateRequest request) {
     val plan = productionPlanService.get(request.getPlanId());
-    val startDate = LocalDateTime.now().plusDays(1)
+    val startDate = OffsetDateTime.now().plusDays(1)
       .with(properties.getDetailGenerationPolicy().getStartTime());
     val endDate = plan.getDueDate().minusDays(1)
       .with(properties.getDetailGenerationPolicy().getEndTime());
@@ -435,9 +435,9 @@ public class ProductionPlanDetailServiceLogic implements ProductionPlanDetailSer
 
     private final BomHierarchyData root;
 
-    private final LocalDateTime startDate;
+    private final OffsetDateTime startDate;
 
-    private final LocalDateTime endDate;
+    private final OffsetDateTime endDate;
 
     private final long intervalHours;
 
@@ -445,7 +445,7 @@ public class ProductionPlanDetailServiceLogic implements ProductionPlanDetailSer
 
     private GenerateContext(ProductionPlanData plan, BomHierarchyData bomHierarchy) {
       this.plan = plan;
-      this.startDate = LocalDateTime.now().plusDays(1)
+      this.startDate = OffsetDateTime.now().plusDays(1)
         .with(properties.getDetailGenerationPolicy().getStartTime());
       this.endDate = plan.getDueDate().minusDays(1)
         .with(properties.getDetailGenerationPolicy().getEndTime());
@@ -489,7 +489,7 @@ public class ProductionPlanDetailServiceLogic implements ProductionPlanDetailSer
       return intervalHours * 60 / 10;
     }
 
-    LocalDateTime getEndDate(long depth) {
+    OffsetDateTime getEndDate(long depth) {
       return startDate.plusHours((maxDepth - depth) * intervalHours)
         .minusMinutes(gapMinutes());
     }
@@ -508,7 +508,7 @@ public class ProductionPlanDetailServiceLogic implements ProductionPlanDetailSer
           .multiply(plan.getPlannedQuantity()).setScale(5, BigDecimal.ROUND_HALF_UP);
     }
 
-    LocalDateTime getStartDate(long depth) {
+    OffsetDateTime getStartDate(long depth) {
       return startDate.plusHours((maxDepth - depth - 1) * intervalHours)
         .plusMinutes(gapMinutes());
     }

@@ -18,7 +18,7 @@ import pico.erp.shared.data.UnitKind
 import pico.erp.user.UserId
 import spock.lang.Specification
 
-import java.time.LocalDateTime
+import java.time.OffsetDateTime
 
 @SpringBootTest(classes = [ProductionPlanApplication, TestConfig])
 @SpringBootTestComponent(parent = TestParentApplication, siblingsSupplier = ComponentDefinitionServiceLoaderTestComponentSiblingsSupplier.class)
@@ -47,7 +47,7 @@ class ProductionPlanDetailServiceSpec extends Specification {
 
   def projectId = ProjectId.from("sample-project1")
 
-  def planStartDate = LocalDateTime.now().plusDays(2)
+  def planStartDate = OffsetDateTime.now().plusDays(2)
 
   def planEndDate = planStartDate.plusDays(1)
 
@@ -70,7 +70,7 @@ class ProductionPlanDetailServiceSpec extends Specification {
         quantity: 100,
         spareQuantity: 10,
         projectId: projectId,
-        dueDate: LocalDateTime.now().plusDays(7),
+        dueDate: OffsetDateTime.now().plusDays(7),
         unit: unit,
         plannerId: plannerId,
         receiverId: receiverId
@@ -83,7 +83,7 @@ class ProductionPlanDetailServiceSpec extends Specification {
         quantity: 100,
         spareQuantity: 10,
         projectId: projectId,
-        dueDate: LocalDateTime.now().plusDays(7),
+        dueDate: OffsetDateTime.now().plusDays(7),
         unit: unit,
         plannerId: plannerId,
         receiverId: receiverId

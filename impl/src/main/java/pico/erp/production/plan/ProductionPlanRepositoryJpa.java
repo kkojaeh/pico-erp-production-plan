@@ -1,6 +1,6 @@
 package pico.erp.production.plan;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.Optional;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +15,7 @@ interface ProductionPlanEntityRepository extends
   CrudRepository<ProductionPlanEntity, ProductionPlanId> {
 
   @Query("SELECT COUNT(r) FROM ProductionPlan r WHERE r.createdDate >= :begin AND r.createdDate <= :end")
-  long countCreatedBetween(@Param("begin") LocalDateTime begin, @Param("end") LocalDateTime end);
+  long countCreatedBetween(@Param("begin") OffsetDateTime begin, @Param("end") OffsetDateTime end);
 
 }
 
@@ -30,7 +30,7 @@ public class ProductionPlanRepositoryJpa implements ProductionPlanRepository {
   private ProductionPlanMapper mapper;
 
   @Override
-  public long countCreatedBetween(LocalDateTime begin, LocalDateTime end) {
+  public long countCreatedBetween(OffsetDateTime begin, OffsetDateTime end) {
     return repository.countCreatedBetween(begin, end);
   }
 

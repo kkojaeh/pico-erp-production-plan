@@ -2,7 +2,7 @@ package pico.erp.production.plan;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.Arrays;
 import javax.persistence.Id;
 import lombok.AccessLevel;
@@ -47,13 +47,13 @@ public class ProductionPlan implements Serializable {
 
   BigDecimal progressRate;
 
-  LocalDateTime dueDate;
+  OffsetDateTime dueDate;
 
-  LocalDateTime determinedDate;
+  OffsetDateTime determinedDate;
 
-  LocalDateTime completedDate;
+  OffsetDateTime completedDate;
 
-  LocalDateTime canceledDate;
+  OffsetDateTime canceledDate;
 
   ProductionPlanStatusKind status;
 
@@ -108,7 +108,7 @@ public class ProductionPlan implements Serializable {
       throw new ProductionPlanExceptions.CannotDetermineException();
     }
     this.status = ProductionPlanStatusKind.DETERMINED;
-    this.determinedDate = LocalDateTime.now();
+    this.determinedDate = OffsetDateTime.now();
     return new ProductionPlanMessages.Determine.Response(
       Arrays.asList(new ProductionPlanEvents.DeterminedEvent(this.id))
     );
@@ -120,7 +120,7 @@ public class ProductionPlan implements Serializable {
       throw new ProductionPlanExceptions.CannotCancelException();
     }
     this.status = ProductionPlanStatusKind.CANCELED;
-    this.canceledDate = LocalDateTime.now();
+    this.canceledDate = OffsetDateTime.now();
     return new ProductionPlanMessages.Cancel.Response(
       Arrays.asList(new ProductionPlanEvents.CanceledEvent(this.id))
     );
@@ -144,7 +144,7 @@ public class ProductionPlan implements Serializable {
     }
     this.status = ProductionPlanStatusKind.COMPLETED;
     this.completedQuantity = request.getCompletedQuantity();
-    this.completedDate = LocalDateTime.now();
+    this.completedDate = OffsetDateTime.now();
     return new ProductionPlanMessages.Complete.Response(
       Arrays.asList(new ProductionPlanEvents.CompletedEvent(this.id))
     );

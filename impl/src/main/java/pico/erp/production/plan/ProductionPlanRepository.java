@@ -1,6 +1,6 @@
 package pico.erp.production.plan;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.Optional;
 import javax.validation.constraints.NotNull;
 import org.springframework.stereotype.Repository;
@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ProductionPlanRepository {
 
-  long countCreatedBetween(LocalDateTime begin, LocalDateTime end);
+  long countCreatedBetween(OffsetDateTime begin, OffsetDateTime end);
 
   ProductionPlan create(@NotNull ProductionPlan orderAcceptance);
 

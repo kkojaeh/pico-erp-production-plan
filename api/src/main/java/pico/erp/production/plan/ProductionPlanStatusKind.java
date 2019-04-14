@@ -48,15 +48,15 @@ public enum ProductionPlanStatusKind implements LocalizedNameable {
     return this == PREPARED;
   }
 
+  public boolean isPreparable() {
+    return this == CREATED;
+  }
+
   public boolean isProgressable() {
     return this == DETERMINED || this == IN_PROGRESS;
   }
 
   public boolean isUpdatable() {
-    return this == CREATED;
-  }
-
-  public boolean isPreparable() {
     return this == CREATED;
   }
 

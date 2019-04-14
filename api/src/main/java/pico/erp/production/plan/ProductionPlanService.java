@@ -17,9 +17,9 @@ public interface ProductionPlanService {
 
   ProductionPlanData get(@Valid @NotNull ProductionPlanId id);
 
-  void progress(@Valid @NotNull ProductionPlanRequests.ProgressRequest request);
-
   void prepare(@Valid @NotNull ProductionPlanRequests.PrepareRequest request);
+
+  void progress(@Valid @NotNull ProductionPlanRequests.ProgressRequest request);
 
   void update(@Valid @NotNull ProductionPlanRequests.UpdateRequest request);
 

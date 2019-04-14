@@ -178,16 +178,16 @@ public class ProductionPlan implements Serializable {
     return status.isDeterminable();
   }
 
+  public boolean isPreparable() {
+    return status.isPreparable();
+  }
+
   public boolean isProgressable() {
     return status.isProgressable();
   }
 
   public boolean isUpdatable() {
     return status.isUpdatable();
-  }
-
-  public boolean isPreparable() {
-    return status.isPreparable();
   }
 
 

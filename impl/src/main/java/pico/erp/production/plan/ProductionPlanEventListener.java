@@ -28,27 +28,6 @@ public class ProductionPlanEventListener {
   @Autowired
   private ProductionPlanDetailServiceLogic planDetailService;
 
-  /**
-   * 상세 계획이 모두 확정되면 계획을 준비 완료로 변경 시킴
-   */
-  @EventListener
-  @JmsListener(destination = LISTENER_NAME + "."
-    + ProductionPlanDetailEvents.DeterminedEvent.CHANNEL)
-  public void onPlanDetailDetermined(ProductionPlanDetailEvents.DeterminedEvent event) {
-    val detail = planDetailService.get(event.getId());
-    val planId = detail.getPlanId();
-    val determined = planDetailService.getAll(planId).stream()
-      .allMatch(d -> d.getStatus() == ProductionPlanDetailStatusKind.DETERMINED);
-    if (determined) {
-      planService.prepare(
-        ProductionPlanRequests.PrepareRequest.builder()
-          .id(planId)
-          .build()
-      );
-    }
-
-  }
-
   @EventListener
   @JmsListener(destination = LISTENER_NAME + "."
     + ProductionPlanDetailEvents.CompletedEvent.CHANNEL)
@@ -77,6 +56,27 @@ public class ProductionPlanEventListener {
 
   }
 
+  /**
+   * 상세 계획이 모두 확정되면 계획을 준비 완료로 변경 시킴
+   */
+  @EventListener
+  @JmsListener(destination = LISTENER_NAME + "."
+    + ProductionPlanDetailEvents.DeterminedEvent.CHANNEL)
+  public void onPlanDetailDetermined(ProductionPlanDetailEvents.DeterminedEvent event) {
+    val detail = planDetailService.get(event.getId());
+    val planId = detail.getPlanId();
+    val determined = planDetailService.getAll(planId).stream()
+      .allMatch(d -> d.getStatus() == ProductionPlanDetailStatusKind.DETERMINED);
+    if (determined) {
+      planService.prepare(
+        ProductionPlanRequests.PrepareRequest.builder()
+          .id(planId)
+          .build()
+      );
+    }
+
+  }
+
   @EventListener
   @JmsListener(destination = LISTENER_NAME + "."
     + ProductionPlanDetailEvents.ProgressedEvent.CHANNEL)
@@ -88,7 +88,7 @@ public class ProductionPlanEventListener {
       val progressRate = details.stream()
         .map(ProductionPlanDetailData::getProgressRate)
         .reduce(BigDecimal.ZERO, BigDecimal::add)
-        .divide(new BigDecimal(details.size()));
+        .divide(new BigDecimal(details.size()), 4, BigDecimal.ROUND_HALF_UP);
       planService.progress(
         ProductionPlanRequests.ProgressRequest.builder()
           .id(plan.getId())

@@ -153,6 +153,15 @@ public class ProductionPlanDetailServiceLogic implements ProductionPlanDetailSer
   }
 
   @Override
+  public void determine(ProductionPlanDetailRequests.DetermineRequest request) {
+    val planDetail = planDetailRepository.findBy(request.getId())
+      .orElseThrow(ProductionPlanDetailExceptions.NotFoundException::new);
+    val response = planDetail.apply(mapper.map(request));
+    planDetailRepository.update(planDetail);
+    eventPublisher.publishEvents(response.getEvents());
+  }
+
+  @Override
   public boolean exists(ProductionPlanDetailId id) {
     return planDetailRepository.exists(id);
   }
@@ -174,7 +183,6 @@ public class ProductionPlanDetailServiceLogic implements ProductionPlanDetailSer
       .setScale(unit.getPrecision(), BigDecimal.ROUND_HALF_UP);
     val adjustedSpareQuantity = spareQuantity.add(spareQuantity.multiply(spareRatio))
       .setScale(unit.getPrecision(), BigDecimal.ROUND_HALF_UP);
-
 
     val detail = ProductionPlanDetailData.builder()
       .id(ProductionPlanDetailId.generate())
@@ -343,15 +351,6 @@ public class ProductionPlanDetailServiceLogic implements ProductionPlanDetailSer
   }
 
   @Override
-  public void determine(ProductionPlanDetailRequests.DetermineRequest request) {
-    val planDetail = planDetailRepository.findBy(request.getId())
-      .orElseThrow(ProductionPlanDetailExceptions.NotFoundException::new);
-    val response = planDetail.apply(mapper.map(request));
-    planDetailRepository.update(planDetail);
-    eventPublisher.publishEvents(response.getEvents());
-  }
-
-  @Override
   public void progress(ProductionPlanDetailRequests.ProgressRequest request) {
     val planDetail = planDetailRepository.findBy(request.getId())
       .orElseThrow(ProductionPlanDetailExceptions.NotFoundException::new);
@@ -369,15 +368,6 @@ public class ProductionPlanDetailServiceLogic implements ProductionPlanDetailSer
     eventPublisher.publishEvents(response.getEvents());
   }
 
-  public void rescheduleByDependency(RescheduleByDependencyRequest request) {
-    val message = mapper.map(request);
-    planDetailRepository.findAllDependedOn(request.getDependencyId()).forEach(detail -> {
-      val response = detail.apply(message);
-      planDetailRepository.update(detail);
-      eventPublisher.publishEvents(response.getEvents());
-    });
-  }
-
   @Override
   public void reschedule(ProductionPlanDetailRequests.RescheduleRequest request) {
     val planDetail = planDetailRepository.findBy(request.getId())
@@ -385,6 +375,15 @@ public class ProductionPlanDetailServiceLogic implements ProductionPlanDetailSer
     val response = planDetail.apply(mapper.map(request));
     planDetailRepository.update(planDetail);
     eventPublisher.publishEvents(response.getEvents());
+  }
+
+  public void rescheduleByDependency(RescheduleByDependencyRequest request) {
+    val message = mapper.map(request);
+    planDetailRepository.findAllDependedOn(request.getDependencyId()).forEach(detail -> {
+      val response = detail.apply(message);
+      planDetailRepository.update(detail);
+      eventPublisher.publishEvents(response.getEvents());
+    });
   }
 
   @Override

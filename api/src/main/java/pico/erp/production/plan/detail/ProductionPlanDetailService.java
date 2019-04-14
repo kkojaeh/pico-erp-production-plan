@@ -17,6 +17,8 @@ public interface ProductionPlanDetailService {
   ProductionPlanDetailData create(
     @Valid @NotNull ProductionPlanDetailRequests.CreateRequest request);
 
+  void delete(@Valid @NotNull ProductionPlanDetailRequests.DeleteRequest request);
+
   void determine(@Valid @NotNull ProductionPlanDetailRequests.DetermineRequest request);
 
   boolean exists(@Valid @NotNull ProductionPlanDetailId id);
@@ -35,8 +37,6 @@ public interface ProductionPlanDetailService {
   ProductionPlanDetailData split(@Valid @NotNull ProductionPlanDetailRequests.SplitRequest request);
 
   void update(@Valid @NotNull ProductionPlanDetailRequests.UpdateRequest request);
-
-  void delete(@Valid @NotNull ProductionPlanDetailRequests.DeleteRequest request);
 
 
 }

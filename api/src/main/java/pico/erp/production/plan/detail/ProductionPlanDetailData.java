@@ -22,6 +22,22 @@ import pico.erp.shared.data.UnitKind;
 @Data
 public class ProductionPlanDetailData {
 
+  public boolean cancelable;
+
+  public boolean completable;
+
+  public boolean determinable;
+
+  public boolean progressable;
+
+  public boolean reschedulable;
+
+  public boolean splittable;
+
+  public boolean updatable;
+
+  public boolean deletable;
+
   ProductionPlanDetailId id;
 
   ProductionPlanDetailGroupId groupId;
@@ -71,21 +87,5 @@ public class ProductionPlanDetailData {
   UnitKind unit;
 
   List<ProductionPlanDetailId> dependencies;
-
-  public boolean cancelable;
-
-  public boolean completable;
-
-  public boolean determinable;
-
-  public boolean progressable;
-
-  public boolean reschedulable;
-
-  public boolean splittable;
-
-  public boolean updatable;
-
-  public boolean deletable;
 
 }

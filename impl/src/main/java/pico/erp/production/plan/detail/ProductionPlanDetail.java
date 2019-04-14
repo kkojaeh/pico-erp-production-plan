@@ -346,6 +346,10 @@ public class ProductionPlanDetail implements Serializable {
     return quantity.add(spareQuantity);
   }
 
+  public BigDecimal getProgressRate() {
+    return progressedQuantity.divide(getPlannedQuantity(), 4, BigDecimal.ROUND_HALF_UP);
+  }
+
   protected OffsetDateTime getStartableDate() {
     val endDates = new HashMap<ProductionPlanDetailGroupId, OffsetDateTime>();
     for (ProductionPlanDetail dependency : dependencies) {
@@ -384,13 +388,13 @@ public class ProductionPlanDetail implements Serializable {
     return false;
   }
 
+  public boolean isDeletable() {
+    return status.isUpdatable() && split == true;
+  }
+
   public boolean isDeterminable() {
     return status.isDeterminable() && this.actorId != null && this.progressType != null
       && this.receiverId != null;
-  }
-
-  public BigDecimal getProgressRate() {
-    return progressedQuantity.divide(getPlannedQuantity(), 4, BigDecimal.ROUND_HALF_UP);
   }
 
   public boolean isProgressable() {
@@ -407,10 +411,6 @@ public class ProductionPlanDetail implements Serializable {
 
   public boolean isUpdatable() {
     return status.isUpdatable();
-  }
-
-  public boolean isDeletable() {
-    return status.isUpdatable() && split == true;
   }
 
 
